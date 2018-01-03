@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<fieldmapping>
+	<table id="operation" name="OPERATION">
+		<field id="operation.site" name="ID_SITE" />
+		<field id="operation.user" name="ID_USER_COMMON" />
+		<field id="operation.type" name="TYPE" />
+		<field id="operation.status" name="STATUS" />
+		<field id="operation.description" name="DESCRIPTION" />
+	</table>
+	<table id="operation.site" name="SITE">
+		<field id="operation.site.label" name="NAME" />
+		<field id="operation.site.customer" name="ID_CLIENT" />
+		<field id="operation.site.optionaladdress" name="ID_ADRESSE" />
+		<field id="operation.site.comment" name="COMMENT" />
+		<field id="operation.site.info" name="INFO" />
+	</table>
+</fieldmapping>	

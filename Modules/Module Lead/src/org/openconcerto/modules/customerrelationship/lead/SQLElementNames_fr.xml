@@ -1,0 +1,22 @@
+<translations>
+	<element refid="customerrelationship.lead" nameClass="masculine" name="prospect" />
+	<element refid="org.openconcerto.modules.customerrelationship.lead/CUSTOMER_VISIT" nameClass="masculine"
+		name="rapport de visite client" namePlural="rapports de visite client" />
+	<element refid="org.openconcerto.modules.customerrelationship.lead/LEAD_VISIT" nameClass="masculine"
+		name="rapport de visite prospect" namePlural="rapports de visite prospect" />
+	<element refid="org.openconcerto.modules.customerrelationship.lead/CUSTOMER_CALL" nameClass="masculine"
+		name="rapport d'appel client" namePlural="rapports d'appel client" />
+	<element refid="org.openconcerto.modules.customerrelationship.lead/LEAD_CALL" nameClass="masculine"
+		name="rapport d'appel prospect" namePlural="rapports d'appel prospect" />
+
+	<element refid="org.openconcerto.modules.customerrelationship.lead/CUSTOMER_VISIT_SERVICE" nameClass="masculine"
+		name="service associé à un rapport de visite client" namePlural="services associés à des rapports de visite client" />
+	<element refid="org.openconcerto.modules.customerrelationship.lead/LEAD_VISIT_SERVICE" nameClass="masculine"
+		name="service associé à un rapport de visite prospect" namePlural="services associés à des rapports de visite prospect" />
+	<element refid="org.openconcerto.modules.customerrelationship.lead/CUSTOMER_CALL_SERVICE" nameClass="masculine"
+		name="service associé à un rapport d'appel client" namePlural="services associés à des rapports d'appel client" />
+	<element refid="org.openconcerto.modules.customerrelationship.lead/LEAD_CALL_SERVICE" nameClass="masculine"
+		name="service associé à un rapport d'appel prospect" namePlural="services associés à des rapports d'appel prospect" />
+
+	<element refid="org.openconcerto.modules.customerrelationship.lead/SERVICE" nameClass="masculine" name="service" />
+</translations>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/OpenConcerto"/>
+	<classpathentry kind="lib" path="lib/commons-math-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/commons-vfs-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/eigenbase-properties.jar"/>
+	<classpathentry kind="lib" path="lib/eigenbase-resgen.jar"/>
+	<classpathentry kind="lib" path="lib/eigenbase-xom.jar"/>
+	<classpathentry kind="lib" path="lib/javacup.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.8.jar"/>
+	<classpathentry kind="lib" path="lib/mondrian.jar"/>
+	<classpathentry kind="lib" path="lib/olap4j-1.0.1.500.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

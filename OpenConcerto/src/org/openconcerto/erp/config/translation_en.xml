@@ -1,0 +1,414 @@
+<translation lang="en">
+	<!-- File -->
+	<menu id="menu.file" label="File" />
+	<menu id="backup" label="Backup" />
+	<menu id="modules" label="Modules" />
+	<menu id="preferences" label="Preferences" />
+	<menu id="quit" label="Exit" />
+	<!-- Creation -->
+	<menu id="menu.create" label="Create" />
+	<menu id="accounting" label="Accounting" />
+	<menu id="accounting.entry.create" label="Accounting entries" />
+	<menu id="customer" label="Customers" />
+	<menu id="customer.quote.create" label="Quote" />
+	<menu id="customer.letter.create" label="Letter" />
+	<menu id="customer.proposal.create" label="Proposal" />
+	<menu id="project.create" label="Project" />
+	<menu id="appointment.create" label="Appointment" />
+	<menu id="mission.create" label="Mission" />
+	<menu id="mission.notice.create" label="Mission notice" />
+	<menu id="customer.delivery.create" label="Delivery" />
+	<menu id="customer.order.create" label="Order" />
+	<menu id="pos.sale.create" label="Sale (POS)" />
+	<menu id="customer.invoice.create" label="Invoice" />
+	<menu id="kd.invoice.create" label="Invoice" />
+	<menu id="customer.credit.create" label="Credit note" />
+	<menu id="supplier" label="Supplier" />
+	<menu id="supplier.order.create" label="Supplier order" />
+	<menu id="supplier.receipt.create" label="Supplier receipt" />
+	<menu id="supplier.purchase.create" label="Supplier purchase" />
+	<menu id="supplier.invoice.purchase.create" label="Supplier invoice" />
+	<menu id="supplier.credit.create" label="Supplier credit" />
+	<menu id="stock.io.create" label="Stock" />
+
+	<!-- List -->
+	<menu id="menu.list" label="Management" />
+	<menu id="menu.list.customer" label="CRM" />
+	<menu id="customer.list" label="Customers" />
+	<menu id="contact.list" label="Contacts" />
+	<menu id="customer.history" label="Customer history" />
+	<menu id="customer.quote.list" label="Quotes" />
+	<menu id="customer.proposal.list" label="Proposals" />
+	<menu id="customer.proposal.item.list" label="Proposal items" />
+	<menu id="menu.list.mission" label="Missions" />
+	<menu id="project.list" label="Projects" />
+	<menu id="mission.list" label="Missions" />
+	<menu id="appointment.list" label="Appointments" />
+	<menu id="appointment.unplanned.list" label="" />
+	<menu id="appointment.notvalidated.list" label="" />
+	<menu id="mission.order.list" label="" />
+	<menu id="mission.notice.list" label="" />
+	<menu id="customer.order.list" label="Orders" />
+	<menu id="customer.delivery.list" label="Deliveries" />
+	<menu id="sales.list" label="Invoices" />
+	<menu id="customer.invoice.list" label="Invoices" />
+	<menu id="payment.factoring.create" label="" />
+	<menu id="payment.factoring.list" label="" />
+	<menu id="customer.credit.list" label="Credits" />
+	<menu id="menu.list.supplier" label="Supplier" />
+	<menu id="supplier.list" label="Suppliers" />
+	<menu id="supplier.contact.list" label="Supplier contacts" />
+	<menu id="supplier.history" label="Supplier history" />
+	<menu id="supplier.order.list" label="Supplier orders" />
+	<menu id="supplier.receipt.list" label="Supplier receipts" />
+	<menu id="supplier.purchase.list" label="Purchases" />
+	<menu id="supplier.invoice.purchase.list" label="Supplier invoices" />
+	<menu id="supplier.credit.list" label="Supplier credits" />
+	<menu id="product.list" label="Product list" />
+	<menu id="product.reference.list" label="Reference list" />
+	<menu id="stock.io.list" label="Stock movements" />
+	<menu id="menu.list.pos" label="Point of sales" />
+	<menu id="pos.receipt.list" label="Receipts (POS)" />
+	<menu id="pos.sales.report" label="Sales (POS)" />
+	<menu id="sales.report" label="" />
+	<!-- Accounting -->
+	<menu id="menu.accounting" label="Accounting" />
+	<menu id="accounting.balance" label="Balance" />
+	<menu id="accounting.client.balance" label="Customer balance" />
+	<menu id="accounting.analytical.result" label="Analytical result" />
+	<menu id="accounting.ledger" label="Ledger" />
+	<menu id="accounting.general.ledger" label="General ledger" />
+	<menu id="accounting.entries.ledger" label="Ledger entries" />
+	<menu id="accounting.entries.list" label="List of ledger entries" />
+	<menu id="menu.accounting.closing" label="Closing" />
+	<menu id="accounting.export" label="Accounting export" />
+	<menu id="accounting.import" label="Accouting import" />
+	<menu id="accounting.validating" label="Validating" />
+	<menu id="accounting.closing" label="Closing" />
+	<!-- Documents -->
+	<menu id="menu.report" label="Reporting" />
+	<menu id="accounting.vat.report" label="VAT report" />
+	<menu id="accounting.costs.report" label="Costs report" />
+	<menu id="accounting.balance.report" label="Balance report" />
+	<menu id="employe.social.report" label="Social report" />
+	<!-- Stats -->
+	<menu id="menu.stats" label="Statistics" />
+	<menu id="sales.graph" label="Sales" />
+	<menu id="sales.margin.graph" label="Margins" />
+	<menu id="sales.list.report" label="Sales report" />
+	<menu id="sales.product.graph" label="Products" />
+	<menu id="sales.product.margin.graph" label="Product pargin" />
+	<menu id="sales.list.graph" label="Sales lists" />
+	<!-- Payment -->
+	<menu id="menu.payment" label="Payment" />
+	<menu id="payment.checking.create" label="Payment checking" />
+	<menu id="payment.reconciliation.create" label="Reconciliation" />
+	<menu id="menu.payment.customer" label="Customer" />
+	<menu id="customer.invoice.unpaid.list" label="Unpaid invoices" />
+	<menu id="customer.dept.list" label="Customer depts" />
+	<menu id="customer.payment.list" label="Payments" />
+	<menu id="customer.payment.followup.list" label="Followup" />
+	<menu id="customer.payment.check.pending.list" label="Customer checks" />
+	<menu id="customer.payment.check.pending.create" label="Pending checks" />
+	<menu id="customer.credit.check.list" label="Credit checks" />
+	<menu id="customer.credit.check.create" label="Pending credit checks" />
+	<menu id="menu.payment.supplier" label="Supplier" />
+	<menu id="supplier.invoice.unpaid.list" label="Unpaid supplier invoices" />
+	<menu id="supplier.bill.list" label="Supplier bills" />
+	<menu id="supplier.payment.check.list" label="Supplier checks" />
+	<menu id="supplier.payment.check.pending.list" label="Pending checks to suppliers" />
+	<!-- Payroll -->
+	<menu id="menu.payroll" label="Payroll" />
+	<menu id="payroll.list.report.print" label="Payroll report" />
+	<menu id="payroll.profile.list" label="Profiles" />
+	<menu id="payroll.history" label="History" />
+	<menu id="payroll.create" label="Payroll" />
+	<menu id="payroll.deposit.create" label="Deposit" />
+	<menu id="employee.list" label="Employees" />
+	<menu id="payroll.section" label="Sections" />
+	<menu id="payroll.variable" label="Variables" />
+	<menu id="payroll.closing" label="Monthly closing" />
+	<!-- Organization -->
+	<menu id="menu.organization" label="Structure" />
+	<menu id="accounting.chart" label="Accounting chart" />
+	<menu id="accounting.journal" label="Acounting journals" />
+	<menu id="accounting.checkDB" label="Check database structure" />
+	<menu id="user.list" label="Users" />
+	<menu id="user.right.list" label="User rights" />
+	<menu id="user.task.right" label="Task rigths" />
+	<menu id="salesman.list" label="Salemen" />
+	<menu id="pos.list" label="Points of sales" />
+	<menu id="secretary.list" label="Secretaries" />
+	<menu id="auditor.list" label="Auditors" />
+	<menu id="index.list" label="Indexes" />
+	<menu id="enterprise.list" label="Enterprises" />
+	<menu id="divison.list" label="" />
+	<menu id="divison.bank.list" label="" />
+	<menu id="enterprise.create" label="New enterprise" />
+	<menu id="mission.sample.list" label="" />
+	<menu id="mission.code.list" label="" />
+	<menu id="department.list" label="" />
+	<!-- Test -->
+	<menu id="menu.test" label="Tests" />
+	<!-- Help -->
+	<menu id="menu.help" label="Help" />
+	<menu id="information" label="About" />
+	<menu id="tips" label="Tips" />
+
+	<!-- Quote -->
+	<item id="sales.quote.number" label="Number" />
+	<item id="sales.quote.date" label="Date" />
+	<item id="sales.quote.label" label="Reference" />
+	<item id="sales.quote.customer" label="Customer" />
+	<item id="sales.quote.saleman" label="Saleman" />
+	<item id="sales.quote.state" label="State" />
+	<item id="sales.quote.address.alternative" label="Alternative address" />
+	<item id="sales.quote.info.general" label="Additional Information" />
+	<action id="sales.quote.accept" label="Mark as accepted" />
+	<action id="sales.quote.refuse" label="Mark as refused" />
+	<action id="sales.quote.create.invoice" label="Transfer to invoice" />
+	<action id="sales.quote.create.supplier.order" label="Transfer to supplier order" />
+	<action id="sales.quote.clone" label="Copy from" />
+	<action id="sales.quote.create.customer.order" label="Transfer to customer order" />
+	<action id="sales.quote.accept.create.customer.order" label="Mark as accepted and transfer to customer order" />
+	<!-- Customer -->
+	<action id="customerrelationship.customer.label.print" label="Print customer label" />
+	<action id="customerrelationship.customer.info.create" label="Create customer info" />
+	<action id="customerrelationship.customer.email.send" label="Send an email" />
+	<!-- Matching -->
+	<action id="financing.accouning.entries.source.show" label="Show source" />
+	<action id="financing.accouning.entries.match" label="Match entry" />
+	<action id="financing.accouning.entries.unmatch" label="Unmatch entry" />
+	<!-- Invoice -->
+	<item id="sales.invoice.number" label="Number" />
+	<item id="sales.invoice.date" label="Date" />
+	<item id="sales.invoice.label" label="Reference" />
+	<item id="sales.invoice.customer" label="Customer" />
+	<item id="sales.invoice.saleman" label="Saleman" />
+	<item id="sales.invoice.address.alternative" label="Alternative address" />
+	<item id="sales.invoice.info.general" label="Additional Information" />
+	<action id="sales.invoice.purchase.update" label="Update purchase total" />
+	<action id="sales.invoice.comment.add" label="Add a comment" />
+	<action id="sales.invoice.create.delivery" label="Transfer to delivery order" />
+	<action id="sales.invoice.create.credit" label="Transfer to credit" />
+	<action id="sales.invoice.clone" label="Copy from" />
+	<action id="sales.invoice.info.show" label="Customer info" />
+	<action id="sales.invoice.create.supplier.order" label="Transfer to supplier order" />
+	<action id="sales.invoice.cancel.credit" label="Cancel credit" />
+	<action id="sales.shipment.create.invoice" label="Transfer to invoice" />
+
+	<!-- Document -->
+	<action id="document.quickprint" label="Quick print" />
+	<action id="document.print" label="Print..." />
+	<action id="document.print.all" label="Print documents" />
+	<action id="document.preview" label="Preview document" />
+	<action id="document.modify" label="Modify docucment with OpenOffice" />
+	<action id="document.create" label="Create document" />
+	<action id="document.pdf.send.email" label="Send PDF by email" />
+	<action id="document.send.email" label="Send by email" />
+
+	<!-- Supplier order -->
+	<action id="supplychain.order.create.purchase" label="Transfer to purchase" />
+	<action id="supplychain.order.create.receipt" label="Transfer to supplier receipt" />
+
+	<!-- Customer order -->
+	<action id="sales.order.create.deliverynote" label="Transfer to delivey note" />
+	<action id="sales.order.create.invoice" label="Transfer to invoice" />
+	<action id="sales.order.create.supplier.order" label="Transfer to supplier order" />
+	<item id="sales.order.state.waiting" label="Waiting" />
+	<item id="sales.order.state.running" label="Running" />
+	<item id="sales.order.state.noStock" label="No Stock" />
+	<item id="sales.order.state.toDeliver" label="To deliver" />
+	<item id="sales.order.state.delivered" label="Delivered" />
+	<item id="sales.order.state.block" label="Blocked" />
+	<item id="sales.order.state.cancelled" label="Cancelled" />
+
+	<!-- Customer -->
+	<item id="customerrelationship.customer.address" label="Addresses" />
+	<item id="customerrelationship.customer.contact" label="Contacts" />
+	<item id="customerrelationship.customer.sales" label="Sales" />
+	<item id="customerrelationship.customer.payment" label="Payment" />
+	<item id="customerrelationship.customer.contacts" label="Contacts" />
+	<item id="customerrelationship.customer.addresses" label="Customer addresses" />
+	<item id="customerrelationship.customer.info" label="Additionnal information" />
+
+
+	<!-- Currency -->
+	<item id="currency.USD" label="US Dollar" />
+	<item id="currency.EUR" label="Euro" />
+	<item id="currency.PLN" label="Polish Zloty" />
+	<item id="currency.GBP" label="British Pound" />
+	<item id="currency.INR" label="Indian Rupee" />
+	<item id="currency.AUD" label="Australian Dollar" />
+	<item id="currency.CAD" label="Canadian Dollar" />
+	<item id="currency.SGD" label="Singapore Dollar" />
+	<item id="currency.CHF" label="Swiss Franc" />
+	<item id="currency.MYR" label="Malaysian Ringgit" />
+	<item id="currency.JPY" label="Japanese Yen" />
+	<item id="currency.CNY" label="Chinese Yuan Renminbi" />
+	<item id="currency.NZD" label="New Zealand Dollar" />
+	<item id="currency.THB" label="Thai Baht" />
+	<item id="currency.HUF" label="Hungarian Forint" />
+	<item id="currency.AED" label="Emirati Dirham" />
+	<item id="currency.HKD" label="Hong Kong Dollar" />
+	<item id="currency.MXN" label="Mexican Peso" />
+	<item id="currency.ZAR" label="South African Rand" />
+	<item id="currency.PHP" label="Philippine Peso" />
+	<item id="currency.SEK" label="Swedish Krona" />
+	<item id="currency.IDR" label="Indonesian Rupiah" />
+	<item id="currency.SAR" label="Saudi Arabian Riyal" />
+	<item id="currency.BRL" label="Brazilian Real" />
+	<item id="currency.TRY" label="Turkish Lira" />
+	<item id="currency.KES" label="Kenyan Shilling" />
+	<item id="currency.KRW" label="South Korean Won" />
+	<item id="currency.EGP" label="Egyptian Pound" />
+	<item id="currency.IQD" label="Iraqi Dinar" />
+	<item id="currency.NOK" label="Norwegian Krone" />
+	<item id="currency.KWD" label="Kuwaiti Dinar" />
+	<item id="currency.RUB" label="Russian Ruble" />
+	<item id="currency.DKK" label="Danish Krone" />
+	<item id="currency.PKR" label="Pakistani Rupee" />
+	<item id="currency.ILS" label="Israeli Shekel" />
+	<item id="currency.QAR" label="Qatari Riyal" />
+	<item id="currency.XAU" label="Gold Ounce" />
+	<item id="currency.OMR" label="Omani Rial" />
+	<item id="currency.COP" label="Colombian Peso" />
+	<item id="currency.CLP" label="Chilean Peso" />
+	<item id="currency.TWD" label="Taiwan New Dollar" />
+	<item id="currency.ARS" label="Argentine Peso" />
+	<item id="currency.CZK" label="Czech Koruna" />
+	<item id="currency.VND" label="Vietnamese Dong" />
+	<item id="currency.MAD" label="Moroccan Dirham" />
+	<item id="currency.JOD" label="Jordanian Dinar" />
+	<item id="currency.BHD" label="Bahraini Dinar" />
+	<item id="currency.XOF" label="CFA Franc" />
+	<item id="currency.LKR" label="Sri Lankan Rupee" />
+	<item id="currency.UAH" label="Ukrainian Hryvnia" />
+	<item id="currency.NGN" label="Nigerian Naira" />
+	<item id="currency.TND" label="Tunisian Dinar" />
+	<item id="currency.UGX" label="Ugandan Shilling" />
+	<item id="currency.RON" label="Romanian New Leu" />
+	<item id="currency.BDT" label="Bangladeshi Taka" />
+	<item id="currency.PEN" label="Peruvian Nuevo Sol" />
+	<item id="currency.GEL" label="Georgian Lari" />
+	<item id="currency.XAF" label="Central African CFA Franc BEAC" />
+	<item id="currency.FJD" label="Fijian Dollar" />
+	<item id="currency.VEF" label="Venezuelan Bolivar" />
+	<item id="currency.BYR" label="Belarusian Ruble" />
+	<item id="currency.HRK" label="Croatian Kuna" />
+	<item id="currency.UZS" label="Uzbekistani Som" />
+	<item id="currency.BGN" label="Bulgarian Lev" />
+	<item id="currency.DZD" label="Algerian Dinar" />
+	<item id="currency.IRR" label="Iranian Rial" />
+	<item id="currency.DOP" label="Dominican Peso" />
+	<item id="currency.ISK" label="Icelandic Krona" />
+	<item id="currency.XAG" label="Silver Ounce" />
+	<item id="currency.CRC" label="Costa Rican Colon" />
+	<item id="currency.SYP" label="Syrian Pound" />
+	<item id="currency.LYD" label="Libyan Dinar" />
+	<item id="currency.JMD" label="Jamaican Dollar" />
+	<item id="currency.MUR" label="Mauritian Rupee" />
+	<item id="currency.GHS" label="Ghanaian Cedi" />
+	<item id="currency.AOA" label="Angolan Kwanza" />
+	<item id="currency.UYU" label="Uruguayan Peso" />
+	<item id="currency.AFN" label="Afghan Afghani" />
+	<item id="currency.LBP" label="Lebanese Pound" />
+	<item id="currency.XPF" label="CFP Franc" />
+	<item id="currency.TTD" label="Trinidadian Dollar" />
+	<item id="currency.TZS" label="Tanzanian Shilling" />
+	<item id="currency.ALL" label="Albanian Lek" />
+	<item id="currency.XCD" label="East Caribbean Dollar" />
+	<item id="currency.GTQ" label="Guatemalan Quetzal" />
+	<item id="currency.NPR" label="Nepalese Rupee" />
+	<item id="currency.BOB" label="Bolivian Boliviano" />
+	<item id="currency.ZWD" label="Zimbabwean Dollar" />
+	<item id="currency.BBD" label="Barbadian or Bajan Dollar" />
+	<item id="currency.CUC" label="Cuban Convertible Peso" />
+	<item id="currency.LAK" label="Lao or Laotian Kip" />
+	<item id="currency.BND" label="Bruneian Dollar" />
+	<item id="currency.BWP" label="Botswana Pula" />
+	<item id="currency.HNL" label="Honduran Lempira" />
+	<item id="currency.PYG" label="Paraguayan Guarani" />
+	<item id="currency.ETB" label="Ethiopian Birr" />
+	<item id="currency.NAD" label="Namibian Dollar" />
+	<item id="currency.PGK" label="Papua New Guinean Kina" />
+	<item id="currency.SDG" label="Sudanese Pound" />
+	<item id="currency.MOP" label="Macau Pataca" />
+	<item id="currency.NIO" label="Nicaraguan Cordoba" />
+	<item id="currency.BMD" label="Bermudian Dollar" />
+	<item id="currency.KZT" label="Kazakhstani Tenge" />
+	<item id="currency.PAB" label="Panamanian Balboa" />
+	<item id="currency.BAM" label="Bosnian Convertible Marka" />
+	<item id="currency.GYD" label="Guyanese Dollar" />
+	<item id="currency.YER" label="Yemeni Rial" />
+	<item id="currency.MGA" label="Malagasy Ariary" />
+	<item id="currency.KYD" label="Caymanian Dollar" />
+	<item id="currency.MZN" label="Mozambican Metical" />
+	<item id="currency.RSD" label="Serbian Dinar" />
+	<item id="currency.SCR" label="Seychellois Rupee" />
+	<item id="currency.AMD" label="Armenian Dram" />
+	<item id="currency.SBD" label="Solomon Islander Dollar" />
+	<item id="currency.AZN" label="Azerbaijani New Manat" />
+	<item id="currency.SLL" label="Sierra Leonean Leone" />
+	<item id="currency.TOP" label="Tongan Pa'anga" />
+	<item id="currency.BZD" label="Belizean Dollar" />
+	<item id="currency.MWK" label="Malawian Kwacha" />
+	<item id="currency.GMD" label="Gambian Dalasi" />
+	<item id="currency.BIF" label="Burundian Franc" />
+	<item id="currency.SOS" label="Somali Shilling" />
+	<item id="currency.HTG" label="Haitian Gourde" />
+	<item id="currency.GNF" label="Guinean Franc" />
+	<item id="currency.MVR" label="Maldivian Rufiyaa" />
+	<item id="currency.MNT" label="Mongolian Tughrik" />
+	<item id="currency.CDF" label="Congolese Franc" />
+	<item id="currency.STD" label="Sao Tomean Dobra" />
+	<item id="currency.TJS" label="Tajikistani Somoni" />
+	<item id="currency.KPW" label="North Korean Won" />
+	<item id="currency.MMK" label="Burmese Kyat" />
+	<item id="currency.LSL" label="Basotho Loti" />
+	<item id="currency.LRD" label="Liberian Dollar" />
+	<item id="currency.KGS" label="Kyrgyzstani Som" />
+	<item id="currency.GIP" label="Gibraltar Pound" />
+	<item id="currency.XPT" label="Platinum Ounce" />
+	<item id="currency.MDL" label="Moldovan Leu" />
+	<item id="currency.CUP" label="Cuban Peso" />
+	<item id="currency.KHR" label="Cambodian Riel" />
+	<item id="currency.MKD" label="Macedonian Denar" />
+	<item id="currency.VUV" label="Ni-Vanuatu Vatu" />
+	<item id="currency.MRO" label="Mauritanian Ouguiya" />
+	<item id="currency.ANG" label="Dutch Guilder" />
+	<item id="currency.SZL" label="Swazi Lilangeni" />
+	<item id="currency.CVE" label="Cape Verdean Escudo" />
+	<item id="currency.SRD" label="Surinamese Dollar" />
+	<item id="currency.XPD" label="Palladium Ounce" />
+	<item id="currency.SVC" label="Salvadoran Colon" />
+	<item id="currency.BSD" label="Bahamian Dollar" />
+	<item id="currency.XDR" label="IMF Special Drawing Rights" />
+	<item id="currency.RWF" label="Rwandan Franc" />
+	<item id="currency.AWG" label="Aruban or Dutch Guilder" />
+	<item id="currency.DJF" label="Djiboutian Franc" />
+	<item id="currency.BTN" label="Bhutanese Ngultrum" />
+	<item id="currency.KMF" label="Comoran Franc" />
+	<item id="currency.WST" label="Samoan Tala" />
+	<item id="currency.SPL" label="Seborgan Luigino" />
+	<item id="currency.ERN" label="Eritrean Nakfa" />
+	<item id="currency.FKP" label="Falkland Island Pound" />
+	<item id="currency.SHP" label="Saint Helenian Pound" />
+	<item id="currency.JEP" label="Jersey Pound" />
+	<item id="currency.TMT" label="Turkmenistani Manat" />
+	<item id="currency.TVD" label="Tuvaluan Dollar" />
+	<item id="currency.IMP" label="Isle of Man Pound" />
+	<item id="currency.GGP" label="Guernsey Pound	" />
+	<item id="currency.USD.symbol" label="$" />
+	<item id="currency.EUR.symbol" label="€" />
+	<item id="currency.PLN.symbol" label="zł" />
+
+	<!-- User right -->
+	<item id="user.right.parameters.editor" label="Parameters" />
+
+	<item id="product.bom.expand" label="Expand BOM" />
+	<item id="product.bom.expose" label="Expose BOM" />
+	<item id="product.bom.flat" label="Flat BOM" />
+
+
+</translation>

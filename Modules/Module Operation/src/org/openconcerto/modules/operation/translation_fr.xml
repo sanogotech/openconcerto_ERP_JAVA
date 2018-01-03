@@ -1,0 +1,5 @@
+<translation lang="fr">
+	<item id="operation.dates" label="Dates d'intervention" />
+	<menu id="operation" label="Interventions" />
+	<menu id="operation.export" label="Export des interventions"/>
+</translation>

@@ -1,0 +1,1090 @@
+/*
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ * 
+ * Copyright 2011 OpenConcerto, by ILM Informatique. All rights reserved.
+ * 
+ * The contents of this file are subject to the terms of the GNU General Public License Version 3
+ * only ("GPL"). You may not use this file except in compliance with the License. You can obtain a
+ * copy of the License at http://www.gnu.org/licenses/gpl-3.0.html See the License for the specific
+ * language governing permissions and limitations under the License.
+ * 
+ * When distributing the software, include this License Header Notice in each file.
+ */
+ 
+ package org.openconcerto.erp.generationDoc;
+
+import org.openconcerto.erp.config.ComptaPropsConfiguration;
+import org.openconcerto.erp.config.Log;
+import org.openconcerto.erp.core.common.element.StyleSQLElement;
+import org.openconcerto.erp.core.common.ui.TotalCalculator;
+import org.openconcerto.erp.core.finance.accounting.element.ComptePCESQLElement;
+import org.openconcerto.erp.core.finance.tax.model.TaxeCache;
+import org.openconcerto.erp.preferences.DefaultNXProps;
+import org.openconcerto.openoffice.ODPackage;
+import org.openconcerto.openoffice.spreadsheet.MutableCell;
+import org.openconcerto.openoffice.spreadsheet.Sheet;
+import org.openconcerto.openoffice.spreadsheet.SpreadSheet;
+import org.openconcerto.sql.Configuration;
+import org.openconcerto.sql.element.SQLElement;
+import org.openconcerto.sql.model.SQLField;
+import org.openconcerto.sql.model.SQLRow;
+import org.openconcerto.sql.model.SQLRowAccessor;
+import org.openconcerto.sql.model.SQLRowValues;
+import org.openconcerto.sql.model.SQLTable;
+import org.openconcerto.utils.ExceptionHandler;
+import org.openconcerto.utils.StreamUtils;
+import org.openconcerto.utils.Tuple2;
+
+import java.awt.Point;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+
+/**
+ * Génération d'un document sxc à partir d'un modéle sxc et d'un fichier xml du meme nom (doc.sxc et
+ * doc.xml) <element location="D4" (type="fill" || type="replace" replacePattern="_" ||
+ * type="codesMissions" ||type="DescriptifArticle" || type="DateEcheance">
+ * <field base="Societe" table="AFFAIRE" name="NUMERO"/> </element>
+ * 
+ * 
+ * @author Administrateur
+ * 
+ */
+public class OOgenerationXML {
+    private static int answer = JOptionPane.NO_OPTION;
+
+    private DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+    // Cache pour la recherche des styles
+    private Map<Sheet, Map<String, Map<Integer, String>>> cacheStyle = new HashMap<Sheet, Map<String, Map<Integer, String>>>();
+    private Map<SQLRowAccessor, Map<String, Object>> taxe = new HashMap<SQLRowAccessor, Map<String, Object>>();
+    private Map<String, Map<Integer, SQLRowAccessor>> cacheForeign = new HashMap<String, Map<Integer, SQLRowAccessor>>();
+
+    // Cache pour les SQLRow du tableau
+    private Map<String, List<? extends SQLRowAccessor>> rowsEltCache = new HashMap<String, List<? extends SQLRowAccessor>>();
+    private final OOXMLCache rowRefCache = new OOXMLCache();
+    private final SQLRow row;
+
+    public OOgenerationXML(SQLRow row) {
+        this.row = row;
+    }
+
+    public synchronized File createDocument(String templateId, String typeTemplate, File outputDirectory, final String expectedFileName, SQLRow rowLanguage) {
+        return createDocument(templateId, typeTemplate, outputDirectory, expectedFileName, rowLanguage, null);
+    }
+
+    public synchronized File createDocument(String templateId, String typeTemplate, File outputDirectory, final String expectedFileName, SQLRow rowLanguage, MetaDataSheet meta) {
+        final String langage = rowLanguage != null ? rowLanguage.getString("CHEMIN") : null;
+
+        cacheStyle.clear();
+        rowRefCache.clearCache();
+        rowsEltCache.clear();
+        taxe.clear();
+        cacheForeign.clear();
+
+        File fDest = new File(outputDirectory, expectedFileName);
+
+        if (fDest.exists()) {
+
+            if (SwingUtilities.isEventDispatchThread()) {
+                answer = JOptionPane.showConfirmDialog(null, "Voulez vous regénérer et écraser l'ancien document?", "Génération du document", JOptionPane.YES_NO_OPTION);
+                Thread.dumpStack();
+            } else {
+                try {
+                    SwingUtilities.invokeAndWait(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            answer = JOptionPane.showConfirmDialog(null, "Voulez vous regénérer et écraser l'ancien document?", "Génération du document", JOptionPane.YES_NO_OPTION);
+                        }
+                    });
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (answer != JOptionPane.YES_OPTION) {
+                return fDest;
+            }
+        }
+
+        SAXBuilder builder = new SAXBuilder();
+        try {
+
+            if (needAnnexe(templateId, typeTemplate, row, rowLanguage)) {
+                // check if it exists
+                final String annexeTemplateId = templateId + "_annexe";
+                InputStream annexeStream = TemplateManager.getInstance().getTemplate(annexeTemplateId, langage, typeTemplate);
+                if (annexeStream != null) {
+                    templateId = annexeTemplateId;
+                    annexeStream.close();
+                    System.err.println("OOgenerationXML.createDocument() : modele With annexe " + templateId);
+                }
+            }
+
+            System.err.println("OOgenerationXML.createDocument() : using template id : " + templateId);
+            final InputStream xmlConfiguration = TemplateManager.getInstance().getTemplateConfiguration(templateId, langage, typeTemplate);
+            if (xmlConfiguration == null) {
+                JOptionPane.showMessageDialog(null, "Fichier de configuration manquant pour " + templateId + " " + ((rowLanguage == null) ? "" : rowLanguage.getString("CHEMIN")) + " "
+                        + ((typeTemplate == null) ? "" : typeTemplate));
+                return null;
+            }
+            Document doc = builder.build(xmlConfiguration);
+            xmlConfiguration.close();
+
+            // On initialise un nouvel élément racine avec l'élément racine du document.
+            Element racine = doc.getRootElement();
+
+            // Liste des <element>
+            List<Element> listElts = racine.getChildren("element");
+
+            // Création et génération du fichier OO
+            final InputStream templateStream = TemplateManager.getInstance().getTemplate(templateId, langage, typeTemplate);
+            if (templateStream == null) {
+                JOptionPane.showMessageDialog(null,
+                        "Modèle manquant pour " + templateId + " " + ((rowLanguage == null) ? "" : rowLanguage.getString("CHEMIN")) + " " + ((typeTemplate == null) ? "" : typeTemplate));
+                return null;
+            }
+            final SpreadSheet spreadSheet;
+            try {
+                spreadSheet = new ODPackage(templateStream).getSpreadSheet();
+                templateStream.close();
+                // On remplit les cellules de la feuille
+                parseElementsXML(listElts, row, spreadSheet);
+
+                // Liste des <element>
+                List<Element> listTable = racine.getChildren("table");
+
+                for (Element tableChild : listTable) {
+                    // On remplit les cellules du tableau
+                    parseTableauXML(tableChild, spreadSheet, rowLanguage);
+                }
+            } catch (Exception e) {
+                ExceptionHandler.handle("Impossible de remplir le document " + templateId + " " + ((rowLanguage == null) ? "" : rowLanguage.getString("CHEMIN")), e);
+                return null;
+            }
+
+            if (meta != null) {
+                meta.applyTo(spreadSheet.getPackage().getMeta(true));
+            }
+
+            // Sauvegarde du fichier
+            return saveSpreadSheet(spreadSheet, outputDirectory, expectedFileName, templateId, rowLanguage);
+
+        } catch (final JDOMException e) {
+
+            e.printStackTrace();
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    ExceptionHandler.handle("Erreur lors de la génération du fichier " + expectedFileName, e);
+                }
+            });
+        } catch (final IOException e) {
+
+            e.printStackTrace();
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    ExceptionHandler.handle("Erreur lors de la création du fichier " + expectedFileName, e);
+                }
+            });
+        }
+        return null;
+    }
+
+    /**
+     * Remplit le tableau
+     * 
+     * @param tableau
+     * @param elt
+     * @param id
+     * @param sheet
+     */
+    private void parseTableauXML(Element tableau, SpreadSheet spreadsheet, SQLRow rowLanguage) {
+
+        if (tableau == null) {
+            return;
+        }
+
+        Object o = tableau.getAttributeValue("sheet");
+        int idSheet = (o == null) ? 0 : Integer.valueOf(o.toString().trim());
+
+        Sheet sheet = spreadsheet.getSheet(idSheet);
+        // Derniere colonne du tableau permet de ne pas chercher sur toutes les colonnes
+        // et d'optimiser la recherche
+        Object oLastColTmp = tableau.getAttributeValue("lastColumn");
+        int lastColumn = -1;
+        int endPageLine = Integer.valueOf(tableau.getAttributeValue("endPageLine"));
+        if (oLastColTmp != null) {
+            lastColumn = sheet.resolveHint(oLastColTmp.toString() + 1).x + 1;
+        }
+
+        Map<String, Map<Integer, String>> mapStyle = searchStyle(sheet, lastColumn, endPageLine);
+
+        if (tableau.getAttributeValue("table").equalsIgnoreCase("TVA")) {
+            fillTaxeDocumentMap(tableau, sheet, mapStyle, false);
+            return;
+        }
+        int nbPage = fillTable(tableau, row, sheet, mapStyle, true, rowLanguage);
+        int firstLine = Integer.valueOf(tableau.getAttributeValue("firstLine"));
+        int endLine = Integer.valueOf(tableau.getAttributeValue("endLine"));
+        Object printRangeObj = sheet.getPrintRanges();
+
+        System.err.println("Nombre de page == " + nbPage);
+        if (nbPage == 1) {
+            fillTable(tableau, row, sheet, mapStyle, false, rowLanguage);
+        } else {
+            if (printRangeObj != null) {
+                String s = printRangeObj.toString();
+                String[] range = s.split(":");
+
+                for (int i = 0; i < range.length; i++) {
+                    String string = range[i];
+                    range[i] = string.subSequence(string.indexOf('.') + 1, string.length()).toString();
+                }
+
+                int rowEnd = -1;
+                if (range.length > 1) {
+                    rowEnd = sheet.resolveHint(range[1]).y + 1;
+                    int rowEndNew = rowEnd * (nbPage);
+                    String sNew = s.replaceAll(String.valueOf(rowEnd), String.valueOf(rowEndNew));
+                    sheet.setPrintRanges(sNew);
+                    System.err.println(" ******  Replace print ranges; Old:" + rowEnd + "--" + s + " New:" + rowEndNew + "--" + sNew);
+                }
+            }
+
+            // le nombre d'éléments ne tient pas dans le tableau du modéle
+            // On duplique la premiere page sans ce qui se trouve apres le tableau
+            sheet.duplicateFirstRows(endLine, 1);
+
+            // On agrandit le tableau pour qu'il remplisse la premiere page
+            int lineToAdd = endPageLine - endLine;
+            String repeatedCount = tableau.getAttributeValue("repeatedCount");
+            if (repeatedCount != null && repeatedCount.trim().length() > 0) {
+                int count = Integer.valueOf(repeatedCount);
+                sheet.duplicateRows(firstLine, lineToAdd / count, count);
+                final int rest = lineToAdd % count;
+                // Si le nombre de ligne ne termine pas à la fin de la page
+                if (rest != 0) {
+                    sheet.insertDuplicatedRows(firstLine + lineToAdd - rest, rest);
+                }
+            } else {
+                sheet.insertDuplicatedRows(firstLine, lineToAdd);
+            }
+
+            // On duplique la premiere page si on a besoin de plus de deux pages
+            System.err.println("nbPage == " + nbPage);
+            if (nbPage > 2) {
+                sheet.duplicateFirstRows(endPageLine, nbPage - 2);
+            }
+            String pageRef = tableau.getAttributeValue("pageRef");
+            if (pageRef != null && pageRef.trim().length() > 0) {
+                int nbPageRef = nbPage;
+                String pageAdd = tableau.getAttributeValue("pageRefAdditional");
+                if (pageAdd != null && pageAdd.trim().length() > 0) {
+                    nbPageRef += Integer.valueOf(pageAdd);
+
+                }
+                MutableCell<SpreadSheet> cell = sheet.getCellAt(pageRef);
+                String pageStart = tableau.getAttributeValue("pageRefStart");
+                int start = 1;
+                if (pageStart != null && pageStart.trim().length() > 0) {
+                    cell.setValue("Page " + pageStart + "/" + nbPageRef);
+                    start = Integer.valueOf(pageStart);
+                } else {
+                    cell.setValue("Page 1/" + nbPageRef);
+                }
+                for (int i = 1; i < nbPageRef; i++) {
+                    MutableCell<SpreadSheet> cell2 = sheet.getCellAt(cell.getX(), cell.getY() + (endPageLine * i));
+                    cell2.setValue("Page " + (i + start) + "/" + nbPageRef);
+                }
+                if (pageAdd != null && pageAdd.trim().length() > 0) {
+                    int pAdd = Integer.valueOf(pageAdd);
+                    for (int i = 0; i < pAdd; i++) {
+                        Sheet s = sheet.getSpreadSheet().getSheet(idSheet + i + 1);
+                        MutableCell<SpreadSheet> cell2 = s.getCellAt(pageRef);
+                        cell2.setValue("Page " + (nbPageRef - (pAdd - i) + 1) + "/" + nbPageRef);
+                    }
+                }
+
+            }
+            fillTable(tableau, row, sheet, mapStyle, false, rowLanguage);
+        }
+
+    }
+
+    /**
+     * Remplit le tableau d'éléments avec les données
+     * 
+     * @param tableau Element Xml contenant les informations sur le tableau
+     * @param elt SQLElement (ex : Bon de livraison)
+     * @param id id de l'élément de la table
+     * @param sheet feuille calc à remplir
+     * @param mapStyle styles trouvés dans la page
+     * @param test remplir ou non avec les valeurs
+     * @return le nombre de page
+     */
+
+    protected SQLRowAccessor getForeignRow(SQLRowAccessor row, SQLField field) {
+        Map<Integer, SQLRowAccessor> c = cacheForeign.get(field.getName());
+
+        int i = row.getInt(field.getName());
+
+        if (c != null && c.get(i) != null) {
+            return c.get(i);
+        } else {
+
+            SQLRowAccessor foreign = row.getForeign(field.getName());
+
+            if (c == null) {
+                Map<Integer, SQLRowAccessor> map = new HashMap<Integer, SQLRowAccessor>();
+                map.put(i, foreign);
+                cacheForeign.put(field.getName(), map);
+            } else {
+                c.put(i, foreign);
+            }
+
+            return foreign;
+        }
+        // return row.getForeignRow(field.getName());
+
+    }
+
+    private void fillTaxe(Element tableau, List<? extends SQLRowAccessor> rows) {
+        // getValuesFromElement(boolean achat, String fieldTotalHT, SQLRow row, SQLTable foreign,
+        // BigDecimal portHT, SQLRow rowTVAPort, SQLTable tableEchantillon,
+        // SQLRow defaultCompte) {
+        SQLTable tableElt = Configuration.getInstance().getRoot().findTable(tableau.getAttributeValue("table"));
+        if (tableElt.contains("ID_TAXE") && tableElt.contains("T_PA_HT")) {
+            boolean achat = tableElt.contains("T_PA_TTC");
+            TotalCalculator calc = new TotalCalculator("T_PA_HT", achat ? "T_PA_HT" : "T_PV_HT", null, achat, null);
+            String val = DefaultNXProps.getInstance().getStringProperty("ArticleService");
+            Boolean bServiceActive = Boolean.valueOf(val);
+
+            calc.setServiceActive(bServiceActive != null && bServiceActive);
+            if (row.getTable().contains("ID_COMPTE_PCE_SERVICE") && !row.isForeignEmpty("ID_COMPTE_PCE_SERVICE")) {
+                SQLRowAccessor serviceCompte = row.getForeign("ID_COMPTE_PCE_SERVICE");
+                if (!serviceCompte.isUndefined()) {
+                    calc.setRowDefaultCptService(serviceCompte);
+                }
+            }
+            if (row.getTable().contains("ID_COMPTE_PCE_VENTE") && !row.isForeignEmpty("ID_COMPTE_PCE_VENTE")) {
+                SQLRowAccessor produitCompte = row.getForeign("ID_COMPTE_PCE_VENTE");
+                if (!produitCompte.isUndefined()) {
+                    calc.setRowDefaultCptProduit(produitCompte);
+                }
+            }
+            long remise = 0;
+            BigDecimal totalAvtRemise = BigDecimal.ZERO;
+            SQLTable tableEchantillon = null;
+            if (row.getTable().getName().equalsIgnoreCase("SAISIE_VENTE_FACTURE") && row.getTable().getDBRoot().contains("ECHANTILLON_ELEMENT")) {
+                tableEchantillon = row.getTable().getTable("ECHANTILLON_ELEMENT");
+            }
+            if (row.getTable().contains("REMISE_HT")) {
+                remise = row.getLong("REMISE_HT");
+                if (remise != 0) {
+                    for (SQLRowAccessor sqlRow : rows) {
+                        calc.addLine(sqlRow, sqlRow.getForeign("ID_ARTICLE"), 1, false);
+                    }
+
+                    if (tableEchantillon != null) {
+                        List<SQLRow> rowsEch = row.getReferentRows(tableEchantillon);
+                        for (SQLRow sqlRow : rowsEch) {
+                            calc.addEchantillon((BigDecimal) sqlRow.getObject("T_PV_HT"), sqlRow.getForeign("ID_TAXE"));
+                        }
+                    }
+                    calc.checkResult();
+                    totalAvtRemise = calc.getTotalHT();
+                }
+            }
+
+            calc.initValues();
+            long valRemiseHTReel = remise;
+            if (row.getFields().contains("POURCENT_FACTURABLE") && row.getFields().contains("MONTANT_FACTURABLE")) {
+                BigDecimal montantFact = row.getBigDecimal("MONTANT_FACTURABLE");
+                BigDecimal percentFact = row.getBigDecimal("POURCENT_FACTURABLE");
+
+                if (montantFact != null && montantFact.signum() > 0) {
+                    valRemiseHTReel = 0;
+                } else if (percentFact != null && percentFact.signum() > 0) {
+                    valRemiseHTReel = percentFact.movePointLeft(2).multiply(new BigDecimal(remise)).setScale(0, RoundingMode.HALF_UP).longValue();
+                }
+
+            }
+            calc.setRemise(valRemiseHTReel, totalAvtRemise);
+
+            for (int i = 0; i < rows.size(); i++) {
+                SQLRowAccessor sqlRow = rows.get(i);
+                calc.addLine(sqlRow, sqlRow.getForeign("ID_ARTICLE"), i, i == rows.size() - 1);
+            }
+
+            if (tableEchantillon != null) {
+                List<SQLRow> rowsEch = row.getReferentRows(tableEchantillon);
+                for (SQLRow sqlRow : rowsEch) {
+                    calc.addEchantillon((BigDecimal) sqlRow.getObject("T_PV_HT"), sqlRow.getForeign("ID_TAXE"));
+                }
+            }
+            SQLRowAccessor rowTVAPort = null;
+            if (row.getTable().contains("ID_TAXE_PORT")) {
+                rowTVAPort = row.getForeign("ID_TAXE_PORT");
+            }
+            if (rowTVAPort != null && !rowTVAPort.isUndefined()) {
+                SQLRowValues rowValsPort = new SQLRowValues(tableElt);
+                rowValsPort.put("T_PV_HT", BigDecimal.valueOf(row.getLong("PORT_HT")).movePointLeft(2));
+                rowValsPort.put("QTE", 1);
+                rowValsPort.put("ID_TAXE", rowTVAPort.getIDNumber());
+
+                final SQLTable tablePrefCompte = Configuration.getInstance().getRoot().findTable("PREFS_COMPTE");
+                final SQLRow rowPrefsCompte = tablePrefCompte.getRow(2);
+                SQLRow rowDefaultCptPort;
+                if (rowTVAPort.getFloat("TAUX") > 0) {
+                    rowDefaultCptPort = rowPrefsCompte.getForeign("ID_COMPTE_PCE_PORT_SOUMIS");
+                    if (rowDefaultCptPort == null || rowDefaultCptPort.isUndefined()) {
+                        try {
+                            rowDefaultCptPort = ComptePCESQLElement.getRowComptePceDefault("PortVenteSoumisTVA");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } else {
+                    rowDefaultCptPort = rowPrefsCompte.getForeign("ID_COMPTE_PCE_PORT_NON_SOUMIS");
+                    if (rowDefaultCptPort == null || rowDefaultCptPort.isUndefined()) {
+                        try {
+                            rowDefaultCptPort = ComptePCESQLElement.getRowComptePceDefault("PortVenteNonSoumisTVA");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                rowValsPort.putRowValues("ID_ARTICLE").put("ID_COMPTE_PCE", rowDefaultCptPort.getID());
+
+                calc.addLine(rowValsPort, rowValsPort.getForeign("ID_ARTICLE"), 1, false);
+            }
+            calc.checkResult();
+            Map<SQLRowAccessor, Tuple2<BigDecimal, BigDecimal>> taxeCalc = calc.getMapHtTVARowTaux();
+            for (SQLRowAccessor sqlRow : taxeCalc.keySet()) {
+                Tuple2<BigDecimal, BigDecimal> v = taxeCalc.get(sqlRow);
+                Map<String, Object> m = new HashMap<String, Object>();
+                m.put("MONTANT_HT", v.get0());
+                m.put("MONTANT_TVA", v.get1());
+                taxe.put(sqlRow, m);
+            }
+        }
+    }
+
+    private int fillTable(Element tableau, SQLRow row, Sheet sheet, Map<String, Map<Integer, String>> mapStyle, boolean test, SQLRow rowLanguage) {
+
+        if (tableau == null) {
+            return 1;
+        }
+
+        int nbPage = 1;
+        int nbCellules = 0;
+
+        OOXMLTableElement tableElement = new OOXMLTableElement(tableau, row, this.rowRefCache);
+        int currentLineTmp = tableElement.getFirstLine();
+        int currentLine = tableElement.getFirstLine();
+
+        SQLElement styleElt = Configuration.getInstance().getDirectory().getElement("STYLE");
+
+        boolean cache = false;
+        String ref = tableau.getAttributeValue("table") + "_" + row.getTable().getName() + row.getID();
+        if (rowsEltCache.get(ref) == null) {
+            rowsEltCache.put(ref, tableElement.getRows());
+        } else {
+            cache = true;
+        }
+        List<Element> listElts = tableau.getChildren("element");
+
+        fillTaxe(tableau, rowsEltCache.get(ref));
+        // on remplit chaque ligne à partir des rows recuperées
+        int numeroRef = 0;
+        for (SQLRowAccessor rowElt : rowsEltCache.get(ref)) {
+
+            final boolean included = isIncluded(tableElement.getFilterId(), tableElement.getForeignTableWhere(), tableElement.getFilterId(), tableElement.getFieldWhere(), rowElt);
+            String styleName = null;
+            if (tableElement.getSQLElement().getTable().contains("ID_STYLE")) {
+                styleName = styleElt.getTable().getRow(rowElt.getForeignID("ID_STYLE")).getString("NOM");
+            }
+
+            if ((included || tableElement.getTypeStyleWhere()) && (styleName == null || !styleName.equalsIgnoreCase("Invisible"))) {
+
+                numeroRef++;
+
+                if (included && tableElement.getTypeStyleWhere()) {
+                    styleName = "Titre 1";
+                }
+
+                if (!included) {
+                    styleName = "Normal";
+                }
+
+                // Blank Line Style
+                boolean first = true;
+                int toAdd = 0;
+                if (styleName != null && tableElement.getListBlankLineStyle().contains(styleName) && first) {
+
+                    toAdd++;
+                    currentLine++;
+                    first = false;
+                }
+
+                // Cache des valeurs
+                Map<Element, Object> mapValues = new HashMap<Element, Object>();
+
+                // Test si l'ensemble des donnees tient sur la page courante
+                Map<String, Integer> tmpMapNbCel = new HashMap<String, Integer>();
+                int tmpNbCellule = fillTableLine(sheet, mapStyle, true, rowLanguage, tableElement, currentLine, listElts, numeroRef, rowElt, tmpMapNbCel, styleName, mapValues);
+                for (String s : tmpMapNbCel.keySet()) {
+                    tmpNbCellule = Math.max(tmpNbCellule, tmpMapNbCel.get(s));
+                }
+                if ((currentLine + tmpNbCellule) > (tableElement.getEndPageLine() * nbPage)) {
+                    toAdd += (tableElement.getEndPageLine() * nbPage) - currentLine;
+                    currentLine = currentLineTmp + tableElement.getEndPageLine();
+                    currentLineTmp = currentLine;
+                    nbPage++;
+                }
+
+                // Remplissage reel des cellules
+                Map<String, Integer> mapNbCel = new HashMap<String, Integer>();
+                int nbCellule = fillTableLine(sheet, mapStyle, test, rowLanguage, tableElement, currentLine, listElts, numeroRef, rowElt, mapNbCel, styleName, mapValues);
+
+                for (String s : mapNbCel.keySet()) {
+                    nbCellule = Math.max(nbCellule, mapNbCel.get(s));
+                }
+                currentLine += nbCellule;
+                nbCellules += (nbCellule + toAdd);
+            }
+        }
+
+        // Nb page entiere
+        int d = nbCellules / (tableElement.getEndPageLine() - tableElement.getFirstLine());
+        // Nb cellule restant
+        int r = nbCellules % (tableElement.getEndPageLine() - tableElement.getFirstLine());
+
+        if (d == 0) {
+            d++;
+            if (nbCellules > (tableElement.getEndLine() - tableElement.getFirstLine() + 1)) {
+                d++;
+            }
+        } else {
+            if (r > (tableElement.getEndLine() - tableElement.getFirstLine() + 1)) {
+                d += 2;
+            } else {
+                d++;
+            }
+        }
+        return d;
+    }
+
+    private int fillTableLine(Sheet sheet, Map<String, Map<Integer, String>> mapStyle, boolean test, SQLRow rowLanguage, OOXMLTableElement tableElement, int currentLine, List<Element> listElts,
+            int numeroRef, SQLRowAccessor rowElt, Map<String, Integer> mapNbCel, String styleName, Map<Element, Object> mapValues) {
+        int nbCellule = 1;
+        int tableLine = 1;
+
+        // Application du style sur toute la ligne (exemple pour mettre une couleur en fond)
+        if (styleName != null && styleName.trim().length() > 0 && mapStyle != null && mapStyle.containsKey(styleName)) {
+            Map<Integer, String> mapLineStyle = mapStyle.get(styleName);
+            if (mapLineStyle != null) {
+                for (Integer col : mapLineStyle.keySet()) {
+                    if (!test && sheet.isCellValid(col, currentLine - 1)) {
+                        sheet.getCellAt(col, currentLine - 1).setStyleName(mapLineStyle.get(col));
+                    }
+                }
+            }
+        }
+
+        // on remplit chaque cellule de la ligne
+        for (Element e : listElts) {
+
+            OOXMLTableField tableField = new OOXMLTableField(e, rowElt, tableElement.getSQLElement(), rowElt.getID(), tableElement.getTypeStyleWhere() ? -1 : tableElement.getFilterId(), rowLanguage,
+                    numeroRef, this.rowRefCache);
+
+            if (mapNbCel.get(e.getAttributeValue("location").trim()) != null) {
+                nbCellule = mapNbCel.get(e.getAttributeValue("location").trim());
+            } else {
+                nbCellule = 1;
+            }
+            int line = tableField.getLine();
+            if (tableField.getLine() > 1) {
+                line = Math.max(nbCellule + ((tableLine == tableField.getLine()) ? 0 : 1), tableField.getLine());
+            }
+            tableLine = tableField.getLine();
+            String loc = e.getAttributeValue("location").trim() + (currentLine + (line - 1));
+
+            // Cellule pour un style défini
+            List<String> listBlankStyle = tableField.getBlankStyle();
+
+            // nbCellule = Math.max(nbCellule, tableField.getLine());
+
+            if (styleName == null || !listBlankStyle.contains(styleName)) {
+
+                try {
+                    Object value = mapValues.get(e);
+                    if (value == null) {
+                        value = tableField.getValue();
+                        mapValues.put(e, value);
+                    }
+                    // if (value != null && value.toString().trim().length() > 0) {
+                    if (tableField.isNeeding2Lines() && tableField.getLine() == 1) {
+                        loc = e.getAttributeValue("location").trim() + (currentLine + 1);
+                        styleName = null;
+                    }
+                    final Point resolveHint = sheet.resolveHint(loc);
+                    if (test || sheet.isCellValid(resolveHint.x, resolveHint.y)) {
+
+                        String styleNameTmp = styleName;
+                        if (tableField.getStyle().trim().length() > 0) {
+                            styleNameTmp = tableField.getStyle();
+                        }
+
+                        Map<Integer, String> mTmp = styleName == null ? null : mapStyle.get(styleNameTmp);
+                        String styleOO = null;
+                        if (mTmp != null) {
+
+                            Object oTmp = mTmp.get(Integer.valueOf(resolveHint.x));
+                            styleOO = oTmp == null ? null : oTmp.toString();
+                        }
+
+                        // Test pour ne pas supprimer le style sur la derniere cellule du
+                        // tableau et donc enlever la ligne de bas de tableau
+                        if (tableField.isLineOption() && value != null && value.toString().trim().length() == 0) {
+                            value = null;
+                            styleOO = null;
+                        }
+
+                        int tmpCelluleAffect = fill(test ? "A1" : loc, value, sheet, tableField.isTypeReplace(), null, styleOO, test, tableField.isMultilineAuto(), tableField.isKeepingEmptyLines());
+                        // tmpCelluleAffect = Math.max(tmpCelluleAffect,
+                        // tableField.getLine());
+                        if (tableField.getLine() != 1 && (!tableField.isLineOption() || (value != null && value.toString().trim().length() > 0))) {
+                            if (nbCellule >= tableField.getLine()) {
+                                tmpCelluleAffect = tmpCelluleAffect + nbCellule;
+                            } else {
+                                tmpCelluleAffect += tableField.getLine() - 1;
+                            }
+                        }
+
+                        if (tableField.isNeeding2Lines()) {
+                            nbCellule = Math.max(nbCellule, 2);
+                        } else {
+                            nbCellule = Math.max(nbCellule, tmpCelluleAffect);
+                        }
+                    } else {
+                        System.err.println("Cell not valid at " + loc);
+                    }
+                    // }
+                } catch (IndexOutOfBoundsException indexOut) {
+                    System.err.println("Cell not valid at " + loc);
+                }
+            }
+            mapNbCel.put(e.getAttributeValue("location").trim(), nbCellule);
+        }
+        return nbCellule;
+    }
+
+    private void fillTaxeDocumentMap(Element tableau, Sheet sheet, Map<String, Map<Integer, String>> mapStyle, boolean test) {
+
+        int line = Integer.valueOf(tableau.getAttributeValue("firstLine"));
+        List<Element> listElts = tableau.getChildren("element");
+
+        for (SQLRowAccessor rowTaxe : taxe.keySet()) {
+
+            Map<String, Object> m = taxe.get(rowTaxe);
+            // on remplit chaque cellule de la ligne
+            for (Element e : listElts) {
+
+                String loc = e.getAttributeValue("location").trim() + line;
+                String name = e.getAttributeValue("name");
+                String typeComp = e.getAttributeValue("type");
+                if (name == null) {
+                    System.err.println("OOgenerationXML.fillTaxe() --> name == null");
+                } else {
+                    Object value = m.get(name);
+                    if (name.equalsIgnoreCase("MONTANT_HT")) {
+                        value = ((BigDecimal) m.get("MONTANT_HT"));
+                    } else if (name.equalsIgnoreCase("MONTANT_TVA")) {
+                        // value = Math.round(((Long) m.get("MONTANT_HT") * rowTaxe.getFloat("TAUX")
+                        // / 100.0));
+                        value = ((BigDecimal) m.get("MONTANT_TVA"));
+                        // value = ((BigDecimal) m.get("MONTANT_HT")).multiply(new
+                        // BigDecimal(rowTaxe.getFloat("TAUX")),
+                        // DecimalUtils.HIGH_PRECISION).movePointLeft(2);
+                    } else if (name.equalsIgnoreCase("NOM")) {
+                        value = TaxeCache.getCache().getRowFromId(rowTaxe.getID()).getString("NOM");
+                        // TODO prefix et suffix
+                        String prefix = e.getAttributeValue("prefix");
+                        if (prefix != null) {
+                            value = prefix + value;
+                        }
+                        String suffix = e.getAttributeValue("suffix");
+                        if (suffix != null) {
+                            value = value + suffix;
+                        }
+                    }
+                    // if (typeComp != null && typeComp.equalsIgnoreCase("Devise")) {
+                    // if (value != null && value instanceof Long)
+                    // value = Double.valueOf(GestionDevise.currencyToString((Long) value, false));
+                    // }
+                    fill(test ? "A1" : loc, value, sheet, false, null, null, test, false, false);
+                }
+            }
+            line++;
+        }
+    }
+
+    /**
+     * Parse l'ensemble des éléments du fichier et insere les valeurs dans le fichier sxc
+     * 
+     * @param elts
+     * @param sqlElt
+     * @param id
+     */
+    private void parseElementsXML(List<Element> elts, SQLRow row, SpreadSheet spreadSheet) {
+        final SQLElement sqlElt = Configuration.getInstance().getDirectory().getElement(row.getTable());
+        for (Element elt : elts) {
+            final OOXMLElement OOElt = new OOXMLElement(elt, sqlElt, row.getID(), row, null, this.rowRefCache);
+            final Object result = OOElt.getValue();
+            if (result != null) {
+                Object o = elt.getAttributeValue("sheet");
+                int sheet = (o == null) ? 0 : Integer.valueOf(o.toString().trim());
+                fill(elt.getAttributeValue("location"), result, spreadSheet.getSheet(sheet), OOElt.isTypeReplace(), OOElt.getReplacePattern(), null, false, OOElt.isMultilineAuto(),
+                        OOElt.isKeepingEmptyLines());
+            }
+        }
+    }
+
+    private static boolean isIncluded(int filterID, String foreignTable, int id, String fieldWhere, SQLRowAccessor rowElt) {
+
+        if (rowElt.getTable().getName().equals("FICHE_PAYE_ELEMENT")) {
+            if (!rowElt.getBoolean("IMPRESSION")) {
+                return false;
+            }
+            if (!rowElt.getBoolean("IN_PERIODE")) {
+                return false;
+            }
+        }
+
+        if (fieldWhere != null && fieldWhere.trim().length() > 0 && rowElt.getTable().contains(fieldWhere) && rowElt.getTable().getField(fieldWhere).getType().getJavaType() == Boolean.class) {
+            return rowElt.getBoolean(fieldWhere);
+        }
+
+        // No filter
+        if (filterID <= 1) {
+            return true;
+        } else {
+            // Filter id in foreign table (FICHE_RENDEZ_VOUS<-POURCENT_SERVICE[ID_VERIFICATEUR]
+            if (foreignTable != null) {
+                boolean b = false;
+                SQLTable table = Configuration.getInstance().getRoot().findTable(foreignTable);
+                Collection<? extends SQLRowAccessor> set = rowElt.getReferentRows(table);
+                for (SQLRowAccessor row : set) {
+                    b = b || (row.getInt(fieldWhere) == filterID);
+                }
+                return b;
+            } else {
+                return (filterID == id);
+            }
+        }
+    }
+
+    /**
+     * Permet de remplir une cellule
+     * 
+     * @param location position de la cellule exemple : A3
+     * @param value valeur à insérer dans la cellule
+     * @param sheet feuille sur laquelle on travaille
+     * @param replace efface ou non le contenu original de la cellule
+     * @param styleOO style à appliquer
+     */
+    private int fill(String location, Object value, Sheet sheet, boolean replace, String replacePattern, String styleOO, boolean test, boolean controleMultiline, boolean keepEmptyLines) {
+
+        int nbCellule = (test && styleOO == null) ? 2 : 1;
+        // est ce que la cellule est valide
+        if (test || sheet.isCellValid(sheet.resolveHint(location).x, sheet.resolveHint(location).y)) {
+
+            MutableCell cell = sheet.getCellAt(location);
+
+            // on divise en 2 cellules si il y a des retours à la ligne
+            if (controleMultiline && value != null && value.toString().indexOf('\n') >= 0) {
+                String[] values = value.toString().split("\n");
+
+                Point p = sheet.resolveHint(location);
+                int y = 0;
+                for (String string : values) {
+                    if (string != null && (keepEmptyLines || string.trim().length() != 0)) {
+                        try {
+                            if (!test) {
+                                MutableCell c = sheet.getCellAt(p.x, p.y + y);
+                                setCellValue(c, string, replace, replacePattern);
+                                if (styleOO != null) {
+                                    c.setStyleName(styleOO);
+                                }
+                            }
+                            y++;
+                        } catch (IllegalArgumentException e) {
+
+                            ExceptionHandler.handle("La cellule " + location + " n'existe pas ou est fusionnée.", e);
+                        }
+                    }
+
+                    // String firstPart = value.toString().substring(0,
+                    // value.toString().indexOf('\n'));
+                    // String secondPart = value.toString().substring(value.toString().indexOf('\n')
+                    // + 1, value.toString().length());
+                    // secondPart = secondPart.replace('\n', ',');
+                    // // System.err.println("Set cell value 1 " + value);
+                    // setCellValue(cell, firstPart, replace, replacePattern);
+                    // if (styleOO != null) {
+                    // cell.setStyleName(styleOO);
+                    // }
+                    //
+                    // Point p = sheet.resolveHint(location);
+                    // System.err.println("Get Cell At " + p.x + " : " + p.y);
+
+                }
+                nbCellule = y;
+            } else {
+                nbCellule = 1;
+                if (!test) {
+                    // application de la valeur
+                    // System.err.println("Set cell value 2 " + value);
+                    setCellValue(cell, value, replace, replacePattern);
+
+                    // Application du style
+                    if (styleOO != null) {
+                        cell.setStyleName(styleOO);
+                    }
+                }
+            }
+        }
+        return nbCellule;
+    }
+
+    /**
+     * remplit une cellule
+     * 
+     * @param cell
+     * @param value
+     * @param replace
+     */
+    private void setCellValue(MutableCell cell, Object value, boolean replace, String replacePattern) {
+        if (value == null) {
+            return;
+            // value = "";
+        }
+
+        if (replace) {
+            if (replacePattern != null) {
+                cell.replaceBy(replacePattern, value.toString());
+            } else {
+                cell.replaceBy("_", value.toString());
+            }
+        } else {
+            cell.setValue(value);
+        }
+    }
+
+    /**
+     * Sauver le document au format OpenOffice. Si le fichier existe déjà, le fichier existant sera
+     * renommé sous la forme nomFic_1.sxc.
+     * 
+     * @param ssheet SpreadSheet à sauvegarder
+     * @param pathDest répertoire de destination du fichier
+     * @param fileName nom du fichier à créer
+     * @return un File pointant sur le fichier créé
+     * @throws IOException
+     */
+
+    private static File saveSpreadSheet(SpreadSheet ssheet, File pathDest, String fileName, String templateId, SQLRow rowLanguage) throws IOException {
+        final String langage = rowLanguage != null ? rowLanguage.getString("CHEMIN") : null;
+        // Test des arguments
+        if (ssheet == null || pathDest == null || fileName.trim().length() == 0) {
+            throw new IllegalArgumentException();
+        }
+
+        // Renommage du fichier si il existe déja
+        File fDest = new File(pathDest, fileName + ".ods");
+
+        if (!pathDest.exists()) {
+            pathDest.mkdirs();
+        }
+
+        fDest = SheetUtils.convertToOldFile(((ComptaPropsConfiguration) Configuration.getInstance()).getRootSociete(), fileName, pathDest, fDest);
+
+        // Sauvegarde
+        try {
+            ssheet.saveAs(fDest);
+        } catch (FileNotFoundException e) {
+            final File file = fDest;
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    try {
+                        JOptionPane.showMessageDialog(null, "Le fichier " + file.getCanonicalPath() + " n'a pu être créé. \n Vérifiez qu'il n'est pas déjà ouvert.");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            e.printStackTrace();
+        }
+
+        // Copie de l'odsp
+        try {
+            File odspOut = new File(pathDest, fileName + ".odsp");
+            final InputStream odspIn = TemplateManager.getInstance().getTemplatePrintConfiguration(templateId, langage, null);
+            if (odspIn != null) {
+                StreamUtils.copy(odspIn, odspOut);
+                odspIn.close();
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("OOgenerationXML.saveSpreadSheet() : Le fichier odsp n'existe pas.");
+        }
+        return fDest;
+    }
+
+    /**
+     * parcourt l'ensemble de la feuille pour trouver les style définit
+     */
+    private Map<String, Map<Integer, String>> searchStyle(Sheet sheet, int colEnd, int rowEnd) {
+
+        if (cacheStyle.get(sheet) != null) {
+            return cacheStyle.get(sheet);
+        }
+
+        Map<String, Map<Integer, String>> mapStyleDef = StyleSQLElement.getMapAllStyle();
+
+        // on parcourt chaque ligne de la feuille pour recuperer les styles
+        int columnCount = (colEnd == -1) ? sheet.getColumnCount() : (colEnd + 1);
+        System.err.println("End column search : " + columnCount);
+
+        int rowCount = (rowEnd > 0) ? rowEnd : sheet.getRowCount();
+        System.err.println("End row search : " + rowCount);
+        for (int i = 0; i < rowCount; i++) {
+            int x = 0;
+            Map<Integer, String> mapCellStyle = new HashMap<Integer, String>();
+            String style = "";
+
+            for (int j = 0; j < columnCount; j++) {
+
+                try {
+                    if (sheet.isCellValid(j, i)) {
+
+                        MutableCell c = sheet.getCellAt(j, i);
+                        String cellStyle = c.getStyleName();
+
+                        try {
+                            if (mapStyleDef.containsKey(c.getValue().toString())) {
+                                style = c.getValue().toString();
+                            }
+                        } catch (IllegalStateException e) {
+                            e.printStackTrace();
+                        }
+                        mapCellStyle.put(Integer.valueOf(x), cellStyle);
+                        if (style.trim().length() != 0) {
+                            c.clearValue();
+                            if (!style.trim().equalsIgnoreCase("Normal") && mapStyleDef.get("Normal") != null) {
+                                String styleCell = mapStyleDef.get("Normal").get(Integer.valueOf(x));
+                                if (styleCell != null && styleCell.length() != 0) {
+                                    c.setStyleName(styleCell);
+                                }
+                            }
+                        }
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    System.err.println("Index out of bounds Exception");
+                }
+                x++;
+            }
+
+            if (style.length() > 0) {
+                mapStyleDef.put(style, mapCellStyle);
+            }
+        }
+        cacheStyle.put(sheet, mapStyleDef);
+        return mapStyleDef;
+    }
+
+    public boolean needAnnexe(String templateId, String typeTemplate, SQLRow row, SQLRow rowLanguage) {
+        final String langage = rowLanguage != null ? rowLanguage.getString("CHEMIN") : null;
+        final SAXBuilder builder = new SAXBuilder();
+        try {
+            final InputStream xmlConfiguration = TemplateManager.getInstance().getTemplateConfiguration(templateId, langage, typeTemplate);
+            final Document doc = builder.build(xmlConfiguration);
+            xmlConfiguration.close();
+            final InputStream template = TemplateManager.getInstance().getTemplate(templateId, langage, typeTemplate);
+            final SpreadSheet spreadSheet = new ODPackage(template).getSpreadSheet();
+            template.close();
+
+            // On initialise un nouvel élément racine avec l'élément racine du document.
+            Element racine = doc.getRootElement();
+
+            List<Element> listTable = racine.getChildren("table");
+
+            Element tableau;
+            if (listTable.size() == 0) {
+                return false;
+            } else {
+                if (listTable.get(0).getAttributeValue("table").equalsIgnoreCase("TVA")) {
+                    tableau = listTable.get(1);
+                } else {
+                    tableau = listTable.get(0);
+                }
+            }
+            final Sheet sheet = spreadSheet.getSheet(0);
+
+            Object oLastColTmp = tableau.getAttributeValue("lastColumn");
+            int lastColumn = -1;
+            int endPageLine = Integer.valueOf(tableau.getAttributeValue("endPageLine"));
+            if (oLastColTmp != null) {
+                lastColumn = sheet.resolveHint(oLastColTmp.toString() + 1).x + 1;
+            }
+
+            Map<String, Map<Integer, String>> mapStyle = searchStyle(sheet, lastColumn, endPageLine);
+
+            int nbPage = fillTable(tableau, row, sheet, mapStyle, true, rowLanguage);
+
+            return nbPage > 1;
+        } catch (Throwable e) {
+            Log.get().severe(e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    protected String getStringProposition(SQLRow rowProp) {
+        return "Notre proposition " + rowProp.getString("NUMERO") + " du " + dateFormat.format(rowProp.getObject("DATE"));
+    }
+
+    public static void main(String[] args) {
+        ComptaPropsConfiguration conf = ComptaPropsConfiguration.create();
+        System.err.println("Conf created");
+        Configuration.setInstance(conf);
+        conf.setUpSocieteDataBaseConnexion(36);
+        System.err.println("Connection Set up");
+        SQLElement elt = Configuration.getInstance().getDirectory().getElement("DEVIS");
+
+        System.err.println("Start Genere");
+        // genere("Devis", "C:\\", "Test", elt.getTable().getRow(19));
+        System.err.println("Stop genere");
+    }
+}

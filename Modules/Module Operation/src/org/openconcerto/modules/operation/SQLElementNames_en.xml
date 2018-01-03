@@ -1,0 +1,4 @@
+<translations>
+	<element refid="org.openconcerto.modules.operation/SITE" nameClass="masculine" name="site" />
+	<element refid="org.openconcerto.modules.operation/OPERATION" nameClass="masculine" name="operation" />
+</translations>

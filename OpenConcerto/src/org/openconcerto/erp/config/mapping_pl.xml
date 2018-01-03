@@ -1,0 +1,208 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ROOT>
+	<TABLE name="ACCES_SOCIETE">
+		<FIELD name="USER_COMMON" label="User" />
+		<FIELD name="ID_SOCIETE_COMMON" label="Ustawienia dostępu" />
+	</TABLE>
+
+	<TABLE name="ADRESSE_COMMON">
+		<FIELD name="RAISON_SOCIALE" label="Nazwa" />
+		<FIELD name="RUE" label="Ulica" />
+		<FIELD name="PAYS" label="Kraj" />
+		<FIELD name="CODE_POSTAL" label="Kod pocztowy" />
+		<FIELD name="VILLE" label="Miasto" />
+		<FIELD name="CEDEX" label="Cedex" />
+		<FIELD name="HAS_CEDEX" label="Cedex" />
+		<FIELD name="NUMERO_CANTON" label="Województwo" />
+		<FIELD name="NUMERO_COMMUNE" label="Numer miasta" />
+	</TABLE>
+
+	<TABLE name="CAISSE_COTISATION">
+		<FIELD name="NOM" label="Sformułowanie" titlelabel="Sformułowanie" />
+		<FIELD name="ID_ADRESSE_COMMON" label="Adres" titlelabel="Adres" />
+		<FIELD name="TEL" label="Tel" titlelabel="Tel." />
+		<FIELD name="MAIL" label="email" titlelabel="email" />
+		<FIELD name="TEL_PORTABLE" label="Telefon kom." titlelabel="Telefon kom." />
+		<FIELD name="ID_COMPTE_PCE_TIERS" label="Stony trzecie" titlelabel="Stony trzecie" />
+		<FIELD name="ID_COMPTE_PCE_CHARGE" label="Inne koszta" titlelabel="Inne koszta" />
+	</TABLE>
+
+	<TABLE name="DEVISE">
+		<FIELD name="CODE" label="Kod" />
+		<FIELD name="NOM" label="Nazwa" />
+		<FIELD name="LIBELLE" label="Text" />
+		<FIELD name="LIBELLE_CENT" label="Label for cents" />
+		<FIELD name="TAUX" label="Stawka" />
+		<FIELD name="TAUX_COMMERCIAL" label="Rate for sales" />
+		<FIELD name="SYMBOLE" label="Symbol" />
+	</TABLE>
+
+	<TABLE name="EXERCICE_COMMON">
+		<FIELD name="NUMERO" label="Nazwa" />
+		<FIELD name="DATE_DEB" label="Data rozpoczęcia" />
+		<FIELD name="DATE_FIN" label="Data zakończenia" />
+		<FIELD name="CLOTURE" label="Zamknięte" />
+		<FIELD name="DATE_CLOTURE" label="Zamknięte do" />
+	</TABLE>
+
+	<TABLE name="IMPRESSION_RUBRIQUE">
+		<FIELD name="NOM" label="Nazwa" />
+	</TABLE>
+
+	<TABLE name="INDICE">
+		<FIELD name="ANNEE" label="Rok" />
+		<FIELD name="JANVIER" label="Styczeń" />
+		<FIELD name="FEVRIER" label="Luty" />
+		<FIELD name="MARS" label="Marzec" />
+		<FIELD name="AVRIL" label="Kwiecień" />
+		<FIELD name="MAI" label="Maj" />
+		<FIELD name="JUIN" label="Czerwiec" />
+		<FIELD name="JUILLET" label="Lipiec" />
+		<FIELD name="AOUT" label="Sierpień" />
+		<FIELD name="SEPTEMBRE" label="Wrzesień" />
+		<FIELD name="OCTOBRE" label="Październik" />
+		<FIELD name="NOVEMBRE" label="Listopad" />
+		<FIELD name="DECEMBRE" label="Grudzień" />
+	</TABLE>
+
+
+
+	<TABLE name="PERIODE_VALIDITE">
+		<FIELD name="JANVIER" label="Styczeń" titlelabel="Styczeń" />
+		<FIELD name="FEVRIER" label="Luty" titlelabel="Luty" />
+		<FIELD name="MARS" label="Marzec" titlelabel="Marzec" />
+		<FIELD name="AVRIL" label="Kwiecień" titlelabel="Kwiecień" />
+		<FIELD name="MAI" label="Maj" titlelabel="Maj" />
+		<FIELD name="JUIN" label="Czerwiec" titlelabel="Czerwiec" />
+		<FIELD name="JUILLET" label="Lipiec" titlelabel="Lipiec" />
+		<FIELD name="AOUT" label="Sierpień" titlelabel="Sierpień" />
+		<FIELD name="SEPTEMBRE" label="Wrzesień" titlelabel="Wrzesień" />
+		<FIELD name="OCTOBRE" label="Październik" titlelabel="Październik" />
+		<FIELD name="NOVEMBRE" label="Listopad" titlelabel="Listopad" />
+		<FIELD name="DECEMBRE" label="Grudzień" titlelabel="Grundzień" />
+	</TABLE>
+
+	<TABLE name="OBJET">
+		<FIELD name="CODE" label="Kod" titlelabel="Kod" />
+		<FIELD name="NOM" label="Nazwa" titlelabel="Nazwa" />
+		<FIELD name="QUALIFICATION" label="Kwalifikacja" titlelabel="Kwalifikacja" />
+		<FIELD name="ID_DOMAINE" label="Obszar" titlelabel="Obszar" />
+	</TABLE>
+
+
+	<TABLE name="POINTAGE">
+		<FIELD name="ACTION" label="Działanie" titlelabel="Działanie" />
+		<FIELD name="ID_USER_COMMON" label="Użytkownik" titlelabel="Użytkownik" />
+		<FIELD name="CARTE" label="Karta" titlelabel="Karta" />
+		<FIELD name="DATE" label="Data" titlelabel="Data" />
+	</TABLE>
+
+	<TABLE name="POLE_PRODUIT">
+		<FIELD name="CODE" label="Kod" titlelabel="Kod" />
+		<FIELD name="NOM" label="Nazwa" titlelabel="Nazwa" />
+		<FIELD name="TEL" label="Telefon" titlelabel="Telefon" />
+		<FIELD name="FAX" label="Fax" titlelabel="Fax" />
+		<FIELD name="MAIL" label="E-Mail" titlelabel="E-Mail" />
+		<FIELD name="NOM_SECRETAIRE" label="Numer główny" titlelabel="Numer główny" />
+		<FIELD name="NOM_DIRECTEUR" label="Numer zarządu" titlelabel="Numer zarządu" />
+		<FIELD name="ID_ADRESSE_COMMON" label="Adres" titlelabel="Adres" />
+	</TABLE>
+
+	<TABLE name="PROFIL_PAYE">
+		<FIELD name="NOM" label="Label" />
+	</TABLE>
+	<TABLE name="PROFIL_PAYE_ELEMENT">
+		<FIELD name="NOM" label="Nazwa" titlelabel="Nazwa" />
+		<FIELD name="ID_PROFIL_PAYE" label="Profil" titlelabel="Profil" />
+		<FIELD name="SOURCE" label="Źródło" titlelabel="Źródło" />
+		<FIELD name="IDSOURCE" label="ID Źródło" titlelabel="ID Źródło" />
+		<FIELD name="POSITION" label="Stan" titlelabel="Stan" />
+	</TABLE>
+
+	<TABLE name="RUBRIQUE_NET">
+		<FIELD name="CODE" label="Kod" titlelabel="Kod" />
+		<FIELD name="NOM" label="Nazwa" titlelabel="Nazwa" />
+		<FIELD name="BASE" label="Kwota podstawowa" titlelabel="Kwota podstawowa" />
+		<FIELD name="TAUX" label="Stawka" titlelabel="Stawka" />
+		<FIELD name="MONTANT" label="Kwota" titlelabel="Kwota" />
+		<FIELD name="BRUT" label="Brutto" titlelabel="Brutto" />
+		<FIELD name="IMPOSABLE" label="Podlegający opodatkowaniu" titlelabel="Podlegający opodatkowaniu" />
+		<FIELD name="FRAIS_PERS" label="Koszty pracownicze" titlelabel="Koszty pracownicze" />
+		<FIELD name="ID_PERIODE_VALIDITE" label="Période de validité" titlelabel="Période de validité" />
+		<FIELD name="ID_TYPE_RUBRIQUE_NET" label="Typ" titlelabel="Typ" />
+		<FIELD name="ID_IMPRESSION_RUBRIQUE" label="Druk" titlelabel="Druk" />
+	</TABLE>
+	<TABLE name="RUBRIQUE_BRUT">
+		<FIELD name="CODE" label="Kod" titlelabel="Kod" />
+		<FIELD name="NOM" label="Nazwa" titlelabel="Nazwa" />
+		<FIELD name="BASE" label="Kwota podstawowa" titlelabel="Kwota podstawowa" />
+		<FIELD name="TAUX" label="Stawka" titlelabel="Stawka" />
+		<FIELD name="MONTANT" label="Kwota" titlelabel="Kwota" />
+		<FIELD name="ID_PERIODE_VALIDITE" label="Okres ważności" titlelabel="Okres ważności" />
+		<FIELD name="ID_TYPE_RUBRIQUE_BRUT" label="Typ" titlelabel="Typ" />
+		<FIELD name="ID_IMPRESSION_RUBRIQUE" label="Druk" titlelabel="Druk" />
+		<FIELD name="IMPOSABLE" label="Podlegający opodatkowaniu" titlelabel="Podlegający opodatkowaniu" />
+		<FIELD name="PART_BRUT" label="Participe à la base brut" titlelabel="Participe à la base brut" />
+		<FIELD name="PART_CP" label="Wniosek o płatny urlop" titlelabel="Wniosek o płatny urlop" />
+	</TABLE>
+	<TABLE name="RUBRIQUE_COMM">
+		<FIELD name="CODE" label="Kod" titlelabel="Kod" />
+		<FIELD name="NOM" label="Nazwa" titlelabel="Nazwa" />
+		<FIELD name="NB_BASE" label="Kwota podstawowa" titlelabel="Kwota podstawowa" />
+		<FIELD name="TAUX_SAL" label="Kwota wypłaty" titlelabel="Kwota wypłaty" />
+		<FIELD name="MONTANT_SAL_AJ" label="Montant sal. à ajouter(MONTANT)" titlelabel="Montant sal. à ajouter(MONTANT)" />
+		<FIELD name="MONTANT_SAL_DED" label="Montant sal. à déduire(MONTANT)" titlelabel="Montant sal. à déduire(MONTANT)" />
+		<FIELD name="TAUX_PAT" label="Taux Sal.(PAT)" titlelabel="Taux Sal.(PAT)" />
+		<FIELD name="MONTANT_PAT" label="Montant pat.(MONTANT)" titlelabel="Montant pat.(MONTANT)" />
+		<FIELD name="ID_IMPRESSION_RUBRIQUE" label="Impression" titlelabel="Impression" />
+		<FIELD name="ID_PERIODE_VALIDITE" label="Période de validité" titlelabel="Période de validité" />
+		<FIELD name="NOM_VISIBLE" label="Afficher le nom de la rubrique" titlelabel="Afficher le nom de la rubrique" />
+	</TABLE>
+
+	<TABLE name="RUBRIQUE_COTISATION">
+		<FIELD name="CODE" label="Code" titlelabel="Code" />
+		<FIELD name="NOM" label="Libellé" titlelabel="Libellé" />
+		<FIELD name="ID_CAISSE_COTISATION" label="Caisse de cotisation" titlelabel="Caisse de cotisation" />
+		<FIELD name="BASE" label="Montant de base (BASE)" titlelabel="Montant de base (BASE)" />
+		<FIELD name="TX_SAL" label="Taux salarié (SAL) en %" titlelabel="Taux salarié (SAL) en %" />
+		<FIELD name="TX_PAT" label="Taux patronal (PAT) en %" titlelabel="Taux patronal (PAT) en %" />
+		<FIELD name="PART_CSG" label="Part CSG CRDS" titlelabel="Part CSG CRDS" />
+		<FIELD name="BRUT" label="Brutto" titlelabel="Brutto" />
+		<FIELD name="IMPOSABLE" label="Podlegający opodatkowaniu" titlelabel="Podlegający opodatkowaniu" />
+		<FIELD name="ID_IMPRESSION_RUBRIQUE" label="Druk" titlelabel="Druk" />
+		<FIELD name="ID_PERIODE_VALIDITE" label="Okres ważności" titlelabel="Okres ważności" />
+	</TABLE>
+
+	<TABLE name="SOCIETE_COMMON">
+		<FIELD name="DATABASE_NAME" label="DB Name" />
+		<FIELD name="NOM" label="Name" />
+		<FIELD name="ADRESSE" label="Address" />
+		<FIELD name="DATE_DEB_EX" label="Date de début d'excercice" />
+		<FIELD name="DATE_FIN_EX" label="Date de fin d'excercice" />
+		<FIELD name="NUM_SIRET" label="Siret number" />
+		<FIELD name="NUM_NII" label="NII number" />
+		<FIELD name="NUM_APE" label="APE number" />
+		<FIELD name="ID_EXERCICE_COMMON" label="Exercice" />
+		<FIELD name="NUM_TEL" label="Numer tel." />
+		<FIELD name="NUM_FAX" label="Fax number" />
+		<FIELD name="MAIL" label="Email" />
+		<FIELD name="ID_ADRESSE_COMMON" label="Adres" />
+		<FIELD name="TYPE" label="Typ" />
+		<FIELD name="RCS" label="RCS" />
+		<FIELD name="CAPITAL" label="Capitał" />
+		<FIELD name="NUMERO_URSSAF" label="URSSAF number" />
+		<FIELD name="ID_DEVISE" label="Waluta" />
+	</TABLE>
+
+	<TABLE name="TYPE_MODELE">
+		<FIELD name="NOM" label="Nazwa" />
+		<FIELD name="TABLE" label="Tabela" />
+	</TABLE>
+	<TABLE name="VARIABLE_PAYE">
+		<FIELD name="VALEUR" label="Wartość" />
+		<FIELD name="NOM" label="Nazwa" />
+		<FIELD name="CATEGORIE" label="Kategoria" />
+		<FIELD name="FORMULE" label="Formuła" />
+		<FIELD name="INFOS" label="Opis" />
+	</TABLE>
+</ROOT>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Schema name="OpenConcerto">
+
+	<Cube name="Ventes">
+		<Table name="SAISIE_VENTE_FACTURE_ELEMENT" schema="_SCHEMA_"/>	
+		<Dimension name="Articles" foreignKey="ID_ARTICLE">
+			<Hierarchy hasAll="true" allMemberName="Tous les articles" primaryKey="ID">
+				<View alias="ARTICLE">
+					<SQL dialect="generic"> <![CDATA[select * from "_SCHEMA_"."ARTICLE" where "ARCHIVE" = '0']]>
+					</SQL>
+				</View>
+				<Level name="Designation" column="NOM" uniqueMembers="true" />
+				<Level name="Code produit" column="CODE" uniqueMembers="true" />
+			</Hierarchy>
+		</Dimension>
+		<Dimension name="Mode de vente" foreignKey="ID_MODE_VENTE_ARTICLE">
+			<Hierarchy hasAll="true" allMemberName="Tous les modes de vente" primaryKey="ID">
+				<View alias="MODE_VENTE_ARTICLE">
+					<SQL dialect="generic"> <![CDATA[select * from "_SCHEMA_"."MODE_VENTE_ARTICLE" where "ARCHIVE" = '0']]>
+					</SQL>
+				</View>
+				<Level name="Type" column="NOM" uniqueMembers="true" />
+
+			</Hierarchy>
+		</Dimension>
+		<Dimension name="Date de facturation" foreignKey="ID_SAISIE_VENTE_FACTURE" type="TimeDimension">
+			<Hierarchy hasAll="true" allMemberName="Toutes les dates" primaryKey="ID">
+
+				<View alias="SAISIE_VENTE_FACTURE">
+					<SQL dialect="generic"> <![CDATA[select * from "_SCHEMA_"."SAISIE_VENTE_FACTURE" where "ARCHIVE" = '0']]>
+					</SQL>
+				</View>
+				<Level name="Annee" column="DATE" uniqueMembers="true" levelType="TimeYears" type="Numeric">
+					<KeyExpression>
+						<SQL dialect="generic">
+							<![CDATA[EXTRACT(YEAR FROM "SAISIE_VENTE_FACTURE"."DATE")]]>
+						</SQL>
+					</KeyExpression>
+				</Level>
+
+				<Level name="Mois" column="DATE" uniqueMembers="false" levelType="TimeMonths" type="Numeric"
+					formatter="org.openconcerto.modules.reports.olap.formatter.MonthMemberFormatter">
+					<KeyExpression>
+						<SQL dialect="generic">
+							<![CDATA[EXTRACT(MONTH FROM "SAISIE_VENTE_FACTURE"."DATE")]]>
+						</SQL>
+					</KeyExpression>
+				</Level>
+			</Hierarchy>
+		</Dimension>
+		<Dimension name="Ligne facturees">
+  		  <Hierarchy hasAll="true" primaryKey="ID">
+  		    <Table name="SAISIE_VENTE_FACTURE_ELEMENT" schema="_SCHEMA_"/>
+  		    <Level name="Quantite" column="QTE" type="Numeric" uniqueMembers="false"/>
+  		    <Level name="Code article" column="CODE" type="String" uniqueMembers="false"/>
+  		    <Level name="Poids" column="POIDS" type="Numeric" uniqueMembers="false"/>
+  		    <Level name="Designation" column="NOM" type="String" uniqueMembers="false"/>
+  			  </Hierarchy>
+ 		 </Dimension>
+		
+		<Measure name="Nombre vendu" column="ID_ARTICLE" aggregator="count" formatString="Standard" />
+		<Measure name="Quantite" column="QTE" aggregator="count" formatString="Standard" />
+		<Measure name="Prix de vente HT" column="T_PV_HT" aggregator="sum"
+			formatter="org.openconcerto.modules.reports.olap.formatter.CentsCellFormatter" />
+		<Measure name="Prix d'achat HT" column="T_PA_HT" aggregator="sum"
+			formatter="org.openconcerto.modules.reports.olap.formatter.CentsCellFormatter" />
+		<CalculatedMember name="Marge" dimension="Measures">
+			<Formula>[Measures].[Prix de vente HT] - [Measures].[Prix d'achat HT]
+			</Formula>
+			<CalculatedMemberProperty name="CELL_FORMATTER"
+				value="org.openconcerto.modules.reports.olap.formatter.CentsCellFormatter" />
+		</CalculatedMember>
+
+	</Cube>
+
+<Cube name="Clients">
+		<Table name="CLIENT" schema="_SCHEMA_"/>
+		 <Dimension name="Type de client">
+            <Hierarchy hasAll="true" allMemberName="Toutes formes juridiques" >
+                <Level name="Forme juridique" column="FORME_JURIDIQUE" uniqueMembers="true"/>
+            </Hierarchy>
+        </Dimension>
+		 
+		<Dimension name="Langue" foreignKey="ID_LANGUE">
+			<Hierarchy hasAll="true" allMemberName="Toutes les langues" primaryKey="ID" >
+				<Table name="LANGUE" schema="_SCHEMA_"/>			 
+				<Level name="Langue" column="NOM" uniqueMembers="true" />
+			</Hierarchy>
+			
+		</Dimension>
+		<Dimension name="Pays" foreignKey="ID_PAYS">
+		<Hierarchy hasAll="true" allMemberName="Tous les pays" primaryKey="ID" >
+				<Table name="PAYS" schema="_SCHEMA_"/>			 
+				<Level name="Pays" column="NOM" uniqueMembers="true" />
+			</Hierarchy>
+		</Dimension>
+		<Measure name="Nombre" column="ID" aggregator="count" formatString="Standard" />
+		
+		</Cube>
+
+
+
+</Schema>

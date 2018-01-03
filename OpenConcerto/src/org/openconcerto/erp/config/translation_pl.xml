@@ -1,0 +1,223 @@
+﻿<translation lang="en">
+	<!-- File -->
+	<menu id="menu.file" label="Plik" />
+	<menu id="backup" label="Kopia" />
+	<menu id="modules" label="Moduły" />
+	<menu id="preferences" label="Ustawienia" />
+	<menu id="quit" label="Wyjście" />
+	<!-- Creation -->
+	<menu id="menu.create" label="Stwórz" />
+	<menu id="accounting" label="Księgowość" />
+	<menu id="accounting.entry.create" label="Zapisy księgowe" />
+	<menu id="customer" label="Klient" />
+	<menu id="customer.quote.create" label="Oferta" />
+	<menu id="customer.letter.create" label="List" />
+	<menu id="customer.proposal.create" label="Propozycja" />
+	<menu id="project.create" label="Projekt" />
+	<menu id="appointment.create" label="Spotkanie" />
+	<menu id="mission.create" label="Mission" />
+	<menu id="mission.notice.create" label="Mission notice" />
+	<menu id="customer.delivery.create" label="Wydanie zewnętrzne" />
+	<menu id="customer.order.create" label="Zamówienie" />
+	<menu id="pos.sale.create" label="Sprzedaż (POS)" />
+	<menu id="customer.invoice.create" label="Faktura Klient" />
+	<menu id="kd.invoice.create" label="Faktura" />
+	<menu id="customer.credit.create" label="Korekta sprzedaży" />
+	<menu id="supplier" label="Dostawcy" />
+	<menu id="supplier.order.create" label="Zamówienie do dostawcy" />
+	<menu id="supplier.receipt.create" label="Przyjêcia oczekuj¹ce na FV" />
+	<menu id="supplier.purchase.create" label="Zakupy u dostawcy" />
+	<menu id="supplier.invoice.purchase.create" label="Faktury dostawców" />
+	<menu id="supplier.credit.create" label="Korekty zakupu" />
+	<menu id="stock.io.create" label="Magazyn" />
+
+	<!-- List -->
+	<menu id="menu.list" label="Zarządzanie" />
+	<menu id="menu.list.customer" label="CRM" />
+	<menu id="customer.list" label="Klienci" />
+	<menu id="contact.list" label="Kontakty" />
+	<menu id="customer.history" label="Historia klienta" />
+	<menu id="customer.quote.list" label="Oferty" />
+	<menu id="customer.proposal.list" label="Propozycje" />
+	<menu id="customer.proposal.item.list" label="Proponowane przedmioty" />
+	<menu id="menu.list.mission" label="Misje" />
+	<menu id="project.list" label="Projekty" />
+	<menu id="mission.list" label="Misje" />
+	<menu id="appointment.list" label="Spotkania" />
+	<menu id="appointment.unplanned.list" label="" />
+	<menu id="appointment.notvalidated.list" label="" />
+	<menu id="mission.order.list" label="" />
+	<menu id="mission.notice.list" label="" />
+	<menu id="customer.order.list" label="Zamówienia" />
+	<menu id="customer.delivery.list" label="Dostawy" />
+	<menu id="sales.list" label="Faktury sprzedaży" />
+	<menu id="customer.invoice.list" label="Faktury" />
+	<menu id="payment.factoring.create" label="" />
+	<menu id="payment.factoring.list" label="" />
+	<menu id="customer.credit.list" label="Korekty" />
+	<menu id="menu.list.supplier" label="Dostawca" />
+	<menu id="supplier.list" label="Dostawcy" />
+	<menu id="supplier.contact.list" label="Kontakty" />
+	<menu id="supplier.history" label="Histaria dostawcy" />
+	<menu id="supplier.order.list" label="Zamówienia do dostawcy" />
+	<menu id="supplier.receipt.list" label="Korekty zakupów" />
+	<menu id="supplier.purchase.list" label="Zakupy" />
+	<menu id="supplier.invoice.purchase.list" label="Faktury dostawców" />
+	<menu id="supplier.credit.list" label="Korekty zakupu" />
+	<menu id="product.list" label="Lista produktów" />
+	<menu id="product.reference.list" label="Lista referencji" />
+	<menu id="stock.io.list" label="Magazyn towarów" />
+	<menu id="menu.list.pos" label="Punkty sprzedaży" />
+	<menu id="pos.receipt.list" label="Receipts (POS)" />
+	<menu id="pos.sales.report" label="Sprzedaż (POS)" />
+	<menu id="sales.report" label="" />
+	<!-- Accounting -->
+	<menu id="menu.accounting" label="Księgowość" />
+	<menu id="accounting.balance" label="Bilans" />
+	<menu id="accounting.client.balance" label="Bilans klienta" />
+	<menu id="accounting.analytical.result" label="Wynik analizy" />
+	<menu id="accounting.ledger" label="Księga" />
+	<menu id="accounting.general.ledger" label="Księga główna" />
+	<menu id="accounting.entries.ledger" label="Wpisy księgi głównej" />
+	<menu id="accounting.entries.list" label="Lista wpisów do księgi głównej" />
+	<menu id="menu.accounting.closing" label="Końcowy" />
+	<menu id="accounting.export" label="Ksigowość export" />
+	<menu id="accounting.import" label="Księgowość import" />
+	<menu id="accounting.validating" label="Walidacja" />
+	<menu id="accounting.closing" label="Końcowy" />
+	<!-- Documents -->
+	<menu id="menu.report" label="Sprawozdanie" />
+	<menu id="accounting.vat.report" label="Raport VAT" />
+	<menu id="accounting.costs.report" label="Raport kosztów" />
+	<menu id="accounting.balance.report" label="Bilans" />
+	<menu id="employe.social.report" label="Raport" />
+	<!-- Stats -->
+	<menu id="menu.stats" label="Statystyki" />
+	<menu id="sales.graph" label="Sprzedaż" />
+	<menu id="sales.margin.graph" label="Marże" />
+	<menu id="sales.list.report" label="Raport sprzedaży" />
+	<menu id="sales.product.graph" label="Produkty" />
+	<menu id="sales.product.margin.graph" label="Marża produktu" />
+	<menu id="sales.list.graph" label="Lista sprzedaży" />
+	<!-- Payment -->
+	<menu id="menu.payment" label="Płatności" />
+	<menu id="payment.checking.create" label="Sprawdzanie płatności" />
+	<menu id="payment.reconciliation.create" label="Regulacja" />
+	<menu id="menu.payment.customer" label="Klient" />
+	<menu id="customer.invoice.unpaid.list" label="Nie zapłacone" />
+	<menu id="customer.dept.list" label="Zadłużenia klientów" />
+	<menu id="customer.payment.list" label="Lista płatności" />
+	<menu id="customer.payment.followup.list" label="Śledzenie płatnoœci" />
+	<menu id="customer.payment.check.pending.list" label="Sprawdzenie płatnoœci klienta" />
+	<menu id="customer.payment.check.pending.create" label="Płatnoœci klienta oczekujące" />
+	<menu id="customer.credit.check.list" label="Terminowe płatności" />
+	<menu id="customer.credit.check.create" label="Termonowe płatnoœci oczekujące" />
+	<menu id="menu.payment.supplier" label="Dostawca" />
+	<menu id="supplier.invoice.unpaid.list" label="Nie zapłacone faktury zakupu" />
+	<menu id="supplier.bill.list" label="Bilans dostawcy" />
+	<menu id="supplier.payment.check.list" label="Płatnoœci do dostawcy" />
+	<menu id="supplier.payment.check.pending.list" label="Płatnoœci do dostawcy oczekujące" />
+	<!-- Payroll -->
+	<menu id="menu.payroll" label="Lista płac" />
+	<menu id="payroll.list.report.print" label="Raport płac" />
+	<menu id="payroll.profile.list" label="Profile" />
+	<menu id="payroll.history" label="Historia" />
+	<menu id="payroll.create" label="Płace" />
+	<menu id="payroll.deposit.create" label="Depozyt" />
+	<menu id="employee.list" label="Zatrudnieni" />
+	<menu id="payroll.section" label="Działy" />
+	<menu id="payroll.variable" label="Zmienne" />
+	<menu id="payroll.closing" label="Płace końcowe" />
+	<!-- Organization -->
+	<menu id="menu.organization" label="Struktura" />
+	<menu id="accounting.chart" label="Wykresy księgowe" />
+	<menu id="accounting.journal" label="Pisma księgowe" />
+	<menu id="accounting.checkDB" label="Sprawdź strukturę bazy danych" />
+	<menu id="user.list" label="Użytkownicy" />
+	<menu id="user.right.list" label="Uprwanienia użytkownika" />
+	<menu id="user.task.right" label="Task rigths" />
+	<menu id="salesman.list" label="Handlowcy" />
+	<menu id="pos.list" label="Punkty sprzedaży" />
+	<menu id="secretary.list" label="Sekretariat" />
+	<menu id="auditor.list" label="Audytorzy" />
+	<menu id="index.list" label="Indexy" />
+	<menu id="enterprise.list" label="Przedsiębiorstwa" />
+	<menu id="divison.list" label="" />
+	<menu id="divison.bank.list" label="" />
+	<menu id="enterprise.create" label="Nowe Przedsiębiorstwa" />
+	<menu id="mission.sample.list" label="" />
+	<menu id="mission.code.list" label="" />
+	<menu id="department.list" label="" />
+	<!-- Test -->
+	<menu id="menu.test" label="Testy" />
+	<!-- Help -->
+	<menu id="menu.help" label="Pomoc" />
+	<menu id="information" label="Informacje" />
+	<menu id="tips" label="Porady" />
+
+	<!-- Quote -->
+	<item id="sales.quote.number" label="Numer" />
+	<item id="sales.quote.date" label="Data" />
+	<item id="sales.quote.label" label="Referencja" />
+	<item id="sales.quote.customer" label="Klient" />
+	<item id="sales.quote.saleman" label="Handlowiec" />
+	<item id="sales.quote.state" label="Status" />
+	<item id="sales.quote.address.alternative" label="Alternatywny adres" />
+	<item id="sales.quote.info.general" label="Główny adres" />
+	<action id="sales.quote.accept" label="Zaakceptuj" />
+	<action id="sales.quote.refuse" label="Odrzuć" />
+	<action id="sales.quote.create.invoice" label="Transfer do faktury" />
+	<action id="sales.quote.create.supplier.order" label="Transfer do zamówienia do dostawcy" />
+	<action id="sales.quote.clone" label="Kopiuj z" />
+	<action id="sales.quote.create.customer.order" label="Transfer do zamówienia klienta" />
+	<action id="sales.quote.accept.create.customer.order" label="Zaakceptuj i transferuj do zamówienia klienta" />
+	<!-- Customer -->
+	<action id="customerrelationship.customer.label.print" label="Druk etykiety klienta" />
+	<action id="customerrelationship.customer.info.create" label="Stwórz informacje o kliencie" />
+	<action id="customerrelationship.customer.email.send" label="Wyślij przez e-mail" />
+	<!-- Matching -->
+	<action id="financing.accouning.entries.source.show" label="Pokaż źródło" />
+	<action id="financing.accouning.entries.match" label="Match entry" />
+	<action id="financing.accouning.entries.unmatch" label="Unmatch entry" />
+	<!-- Invoice -->
+	<item id="sales.invoice.number" label="Numer" />
+	<item id="sales.invoice.date" label="Data" />
+	<item id="sales.invoice.label" label="Referencja" />
+	<item id="sales.invoice.customer" label="Klient" />
+	<item id="sales.invoice.saleman" label="Handlowiec" />
+	<item id="sales.invoice.address.alternative" label="Alternatywny adres" />
+	<item id="sales.invoice.info.general" label="Dodatkowe informacje" />
+	<action id="sales.invoice.purchase.update" label="Aktualizacja zakupów" />
+	<action id="sales.invoice.comment.add" label="Komentarz" />
+	<action id="sales.invoice.create.delivery" label="Transfer do WZ" />
+	<action id="sales.invoice.create.credit" label="Transfer płatnoœci terminowej" />
+	<action id="sales.invoice.clone" label="Kopiuj z" />
+	<action id="sales.invoice.info.show" label="Informacje o kliencie" />
+	<action id="sales.invoice.create.supplier.order" label="Transfer do zamówienia do dostawcy" />
+	<action id="sales.shipment.create.invoice" label="Transfer do faktury" />
+
+	<!-- Document -->
+	<action id="document.quickprint" label="Szybki wydruk" />
+	<action id="document.print" label="Wydruk..." />
+	<action id="document.print.all" label="Wydruk dokumentów" />
+	<action id="document.preview" label="Podgląd dokumentu" />
+	<action id="document.modify" label="Modyfukuj przez OpenOffice" />
+	<action id="document.create" label="Stwórz dokument" />
+	<action id="document.pdf.send.email" label="Wyślij plik PDF" />
+	<action id="document.send.email" label="Wyślij e-mail" />
+
+	<!-- Supplier order -->
+	<action id="supplychain.order.create.purchase" label="Transfer do zakupów" />
+	<action id="supplychain.order.create.receipt" label="Transfer do zamówienia" />
+
+	<!-- Customer order -->
+	<action id="sales.order.create.deliverynote" label="Transfer WZ" />
+	<action id="sales.order.create.invoice" label="Transfer faktury" />
+	<action id="sales.order.create.supplier.order" label="Transfer zamówienie do dostawcy" />
+
+	<!-- Currency -->
+	<item id="currency.USD" label="US Dollar" />
+	<item id="currency.EUR" label="Euro" />
+	<item id="currency.PLN" label="Złoty" />
+
+</translation>

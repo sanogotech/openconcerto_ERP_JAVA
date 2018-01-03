@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ROOT>
+	<TABLE name="OPERATION">
+		<FIELD name="ID_SITE" label="Chantier" />
+		<FIELD name="ID_USER_COMMON" label="Salarié" />
+		<FIELD name="TYPE" label="Nature de la prestation" />
+		<FIELD name="STATUS" label="Etat" />
+		<FIELD name="DESCRIPTION" label="Description" />
+	</TABLE>
+	<TABLE name="SITE">
+		<FIELD name="NAME" label="Libellé" />
+		<FIELD name="ID_CLIENT" label="Client" />
+		<FIELD name="ID_ADRESSE" label="Adresse spécifique" />
+		<FIELD name="COMMENT" label="Commentaire" />
+		<FIELD name="INFO" label="Informations complémentaires" />
+	</TABLE>
+</ROOT>

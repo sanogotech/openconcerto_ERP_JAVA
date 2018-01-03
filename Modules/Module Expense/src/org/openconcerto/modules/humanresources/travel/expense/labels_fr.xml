@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ROOT>
+	<TABLE name="EXPENSE_STATE">
+		<FIELD name="NAME" label="Nom" />
+	</TABLE>
+	<TABLE name="EXPENSE">
+		<FIELD name="NAME" label="Nom" />
+		<FIELD name="USER_COMMON" label="Employé" />
+		<FIELD name="DATE" label="Date" />
+		<FIELD name="DESCRIPTION" label="Nature et description des frais" />
+		<FIELD name="TRAVEL_DISTANCE" label="Distance (Kms)" />
+		<FIELD name="TRAVEL_RATE" label="Tarif kilométrique" />
+		<FIELD name="TRAVEL_AMOUNT" label="Montant des frais kilométriques" />
+		<FIELD name="MISC_AMOUNT" label="Montant des frais annexes" />
+		<FIELD name="ID_EXPENSE_STATE" label="Status" />
+		<FIELD name="ID_USER_COMMON" label="Employé" />
+		<FIELD name="ID_EXPENSE_STATE" label="Status" />
+	</TABLE>
+
+</ROOT>

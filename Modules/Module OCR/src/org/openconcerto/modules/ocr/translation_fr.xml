@@ -1,0 +1,4 @@
+<translation lang="fr">
+	<menu id="menu.ocr" label="Numérisation" />
+	<menu id="menu.ocr.supplier.invoice" label="Facture fournisseurs" />
+</translation>

@@ -1,0 +1,5 @@
+﻿<translations>
+	<element refid="CONTACT" name="Kontakt" />
+	<element refid="CONTACT_FOURNISSEUR" name="supplier contact" namePlural="Kontakt do dostawcy" />
+	<element refid="CONTACT_ADMINISTRATIF" name="Kotakt administracyjny" />
+</translations>
