@@ -1,6 +1,8 @@
 # openconcerto_ERP_JAVA
 Copie du Dépôt officiel du code source de l'ERP OpenConcerto : http://code.openconcerto.org/listing.php?repname=OpenConcerto
 
+# Binaires
+https://www.openconcerto.org/fr/telechargement/betas/1.6/
 
 # Docs
 Tout est expliqué ici:
